@@ -1,1 +1,1 @@
-# Text analytics sentiment classification
+# Sentiment Classification Project for Text Analytics
