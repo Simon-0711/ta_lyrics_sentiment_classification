@@ -14,3 +14,8 @@ You can then start ot stop these services at anytime by typing
 docker-compse start 
 docker-compose stop
 ```
+
+The startup may take a while. When the appearing log messages in the terminal are stalling, the app should be ready to use.
+Kibana is accessed by http://localhost:5601
+Elasticsearch is accessed by http://localhost:9200
+Fasatpi is accessed by http://localhost:8000
