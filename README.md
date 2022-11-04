@@ -1,6 +1,5 @@
 # Sentiment Classification Project for Text Analytics
 
-
 ## Start guide
 
 Clone the repository and run from the root of it:
@@ -19,3 +18,14 @@ The startup may take a while. When the appearing log messages in the terminal ar
 Kibana is accessed by http://localhost:5601
 Elasticsearch is accessed by http://localhost:9200
 Fasatpi is accessed by http://localhost:8000
+
+### Start up only certain services
+To start only certain services like fastapi or elasticsearch or kibana, you can use the following command:
+```
+docker-compose start <servicename>
+```
+Please note that this might only work if you have run previously 
+```
+docker-compose up
+```
+and stopped the container services.
