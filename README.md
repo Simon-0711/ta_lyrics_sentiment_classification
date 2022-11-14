@@ -10,7 +10,7 @@ Maximilian Ludwig (maximilian.ludwig02@stud.uni-heidelberg.de)
 In this project we will use the githup project https://github.com/workmanjack/lyric-mood-classification as starting point. We will utilize the devloped CNN for mood classification based on lyrics in this project an apply it to our dataset.
 
 #### Utilized librarires
-The project is runnable by simply using the command ``` docker-compose up ```, which builds and starts all necessary services. Only docker (preferrably in Linux or WSL2) is a prerequisite.
+The project is runnable by simply using the command ``` docker-compose up ```, which builds and starts all necessary services. Only docker (preferrably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your System.
 
 #### Contributions
 
