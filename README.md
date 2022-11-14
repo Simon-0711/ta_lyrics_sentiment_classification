@@ -47,3 +47,10 @@ Please note that this might only work if you have run previously
 docker-compose up
 ```
 and stopped the container services.
+
+### Update the images
+When you update the dockerfiles or let's say the npm dependencies (basically anything that needs to be build) you might want to run ``` docker-compose build ``` to create a new image version. Otherwise the container might not have the correct dependencies injected
+
+## Troubleshooting:
+### The application takes so long to start
+If you are using windows, try to clone the repository into your wsl file system and run it from there. Especially the frontend is runinng extremly slow otherwise
