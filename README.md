@@ -1,4 +1,21 @@
 # Sentiment Classification Project for Text Analytics
+## Project details
+#### Title: Sentiment Classification Project for Text Analytics
+#### Team members: 
+Pascal Hansen (pascal.hansen@stud.uni-heidelberg.de)
+Simon Pavicic (simon.pavicic@stud.uni-heidelberg.de)
+Maximilian Ludwig (maximilian.ludwig02@stud.uni-heidelberg.de)
+
+#### Existing code fragments
+In this project we will use the githup project https://github.com/workmanjack/lyric-mood-classification as starting point. We will utilize the devloped CNN for mood classification based on lyrics in this project an apply it to our dataset.
+
+#### Utilized librarires
+The project is runnable by simply using the command ``` docker-compose up ```, which builds and starts all necessary services. Only docker (preferrably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your System.
+
+#### Contributions
+
+
+
 
 ## Start guide
 
@@ -18,6 +35,7 @@ The startup may take a while. When the appearing log messages in the terminal ar
 Kibana is accessed by http://localhost:5601
 Elasticsearch is accessed by http://localhost:9200
 Fasatpi is accessed by http://localhost:8000
+Fasatpi is accessed by http://localhost:3000
 
 ### Start up only certain services
 To start only certain services like fastapi or elasticsearch or kibana, you can use the following command:
@@ -29,3 +47,10 @@ Please note that this might only work if you have run previously
 docker-compose up
 ```
 and stopped the container services.
+
+### Update the images
+When you update the dockerfiles or let's say the npm dependencies (basically anything that needs to be build) you might want to run ``` docker-compose build ``` to create a new image version. Otherwise the container might not have the correct dependencies injected
+
+## Troubleshooting:
+### The application takes so long to start
+If you are using windows, try to clone the repository into your wsl file system and run it from there. Especially the frontend is runinng extremly slow otherwise

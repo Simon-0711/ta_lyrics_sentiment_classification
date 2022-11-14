@@ -24,18 +24,32 @@ services:
   fastapi:
     build:
       context: ./
-      dockerfile: ./dockerfile
+      dockerfile: ./dockerfile_fastapi
     container_name: fastapi
     networks:
       - fullstack
     volumes:
       - type: bind
-        source: ./frontend_backend
-        target: /opt/frontend_backend
+        source: ./backend
+        target: /opt/backend
     ports:
       - 8000:8000
+    command: sh -c  "cd /opt/backend && uvicorn main:app --host 0.0.0.0 --port 8000 --reload "
 
-    command: sh -c  "cd /opt/frontend_backend && uvicorn main:app --host 0.0.0.0 --port 8000 --reload "
+  react:
+    build:
+      context: ./
+      dockerfile: ./dockerfile_react
+    container_name: react
+    networks:
+      - fullstack
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /opt/frontend
+    ports:
+      - 3000:3000
+    command: sh -c "cd /opt/frontend/mood_classification && npm install && npm start"
 
 networks:
   fullstack:
