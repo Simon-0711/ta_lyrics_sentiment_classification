@@ -7,6 +7,12 @@ __pycache__/
 node_modules
 node_modules/
 
+# macOS
+.DS_Store
+
+# Data 
+*.csv
+
 # C extensions
 *.so
 
