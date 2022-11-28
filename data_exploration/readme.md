@@ -67,7 +67,6 @@ Let's take a look at the genres in the dataset and their distribution.
 The following figures show the total appearance (count) of songs per genre for all genres as well as the top 20 genres. 
 
 <img src="images/genre_count.png" width="1000"/>
-
 <img src="images/genre_count_zoomed.png" width="600"/>
 
 ### Popularity
