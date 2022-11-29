@@ -70,6 +70,10 @@ When you update the dockerfiles or let's say the npm dependencies (basically any
 
 
 ## Coding guidelines
+#### Code formatting 
+For code formatting we will use Black: https://github.com/psf/black. 
+
+#### Docstring format
 Function and class descriptions will follow the Sphinx guidline as shown here: https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html.
 
 
