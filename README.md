@@ -21,12 +21,15 @@ See commit history.
 ## Project state
 #### Planning state
 
+
 #### Future planning 
+
 
 #### High-level architecture description
 
+
 #### Data analysis 
-See ta_lyrics_sentiment_classification/data_exploration/readme.md
+For a detailed description of the data analysis performed please see ta_lyrics_sentiment_classification/data_exploration/readme.md as well as the jupyter notebooks found under ta_lyrics_sentiment_classification/data_exploration/.
 
 #### Experiments 
 
