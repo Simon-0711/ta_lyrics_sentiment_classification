@@ -1,6 +1,8 @@
 # Sentiment Classification Project for Text Analytics
 ## Project details
-#### Title: Sentiment Classification Project for Text Analytics
+#### Title: 
+Sentiment Classification Project for Text Analytics
+
 #### Team members: 
 - Pascal Hansen (pascal.hansen@stud.uni-heidelberg.de)
 - Simon Pavicic (simon.pavicic@stud.uni-heidelberg.de)
@@ -31,7 +33,6 @@ See ta_lyrics_sentiment_classification/data_exploration/readme.md
 
 
 ## Start guide
-
 Clone the repository and run from the root of it:
 ``` docker-compose up ```
 This will start up the docker containers specified in the docker-compose file.
@@ -63,6 +64,11 @@ and stopped the container services.
 
 ### Update the images
 When you update the dockerfiles or let's say the npm dependencies (basically anything that needs to be build) you might want to run ``` docker-compose build ``` to create a new image version. Otherwise the container might not have the correct dependencies injected
+
+
+## Coding guidelines
+Function and class descriptions will follow the Sphinx guidline as shown here: https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html.
+
 
 ## Troubleshooting:
 ### The application takes so long to start
