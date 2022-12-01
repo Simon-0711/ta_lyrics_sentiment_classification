@@ -12,6 +12,7 @@ node_modules/
 
 # Data 
 *.csv
+*.json
 
 # C extensions
 *.so

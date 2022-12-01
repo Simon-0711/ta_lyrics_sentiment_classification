@@ -1,10 +1,12 @@
 # Sentiment Classification Project for Text Analytics
 ## Project details
-#### Title: Sentiment Classification Project for Text Analytics
+#### Title: 
+Sentiment Classification Project for Text Analytics
+
 #### Team members: 
-Pascal Hansen (pascal.hansen@stud.uni-heidelberg.de)
-Simon Pavicic (simon.pavicic@stud.uni-heidelberg.de)
-Maximilian Ludwig (maximilian.ludwig02@stud.uni-heidelberg.de)
+- Pascal Hansen (pascal.hansen@stud.uni-heidelberg.de)
+- Simon Pavicic (simon.pavicic@stud.uni-heidelberg.de)
+- Maximilian Ludwig (maximilian.ludwig02@stud.uni-heidelberg.de)
 
 #### Existing code fragments
 In this project we will use the githup project https://github.com/workmanjack/lyric-mood-classification as starting point. We will utilize the devloped CNN for mood classification based on lyrics in this project an apply it to our dataset.
@@ -13,12 +15,27 @@ In this project we will use the githup project https://github.com/workmanjack/ly
 The project is runnable by simply using the command ``` docker-compose up ```, which builds and starts all necessary services. Only docker (preferrably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your System.
 
 #### Contributions
+See commit history. 
 
+
+## Project state
+#### Planning state
+
+
+#### Future planning 
+
+
+#### High-level architecture description
+
+
+#### Data analysis 
+For a detailed description of the data analysis performed please see ta_lyrics_sentiment_classification/data_exploration/readme.md as well as the jupyter notebooks found under ta_lyrics_sentiment_classification/data_exploration/.
+
+#### Experiments 
 
 
 
 ## Start guide
-
 Clone the repository and run from the root of it:
 ``` docker-compose up ```
 This will start up the docker containers specified in the docker-compose file.
@@ -50,6 +67,15 @@ and stopped the container services.
 
 ### Update the images
 When you update the dockerfiles or let's say the npm dependencies (basically anything that needs to be build) you might want to run ``` docker-compose build ``` to create a new image version. Otherwise the container might not have the correct dependencies injected
+
+
+## Coding guidelines
+#### Code formatting 
+For code formatting we will use Black: https://github.com/psf/black. 
+
+#### Docstring format
+Function and class descriptions will follow the Sphinx guidline as shown here: https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html.
+
 
 ## Troubleshooting:
 ### The application takes so long to start
