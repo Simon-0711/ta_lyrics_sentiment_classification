@@ -33,7 +33,7 @@ The project harnesses React as frontend framework and FastAPI as backend. Furthe
 As storage solution the project relies on Elasticsearch in combination with Kibana for a better UI. In Elasticsearch, the songs will be stored alongside their according moods, so that after an initial classification, the mood of a song can be retrieved very quickly. 
 
 ##### use case 1: The song can be found in the DB
-The following image displays the use case where a song was found in Elasticsearch (The song has been already analyzed)
+The following image displays the use case in which a song was found in Elasticsearch (The song has been already analyzed)
 
 <img src="images/architecture_uc_1.png" width="600"/>
 
@@ -42,10 +42,10 @@ As you can see, if the song can be found in elasticsearch, the backend will simp
 
 ##### use case 2: The song cannot be found in the DB
 
-The following image displays the use case where a song was not found in Elasticsearch (The song hasn't been analyzed yet)
+The following image displays the use case in which a song was not found in Elasticsearch (The song hasn't been analyzed yet)
 
 <img src="images/architecture_uc_2.png" width="600"/>
-If a user queries for a song, that is not yet in the database, the backend will access the Genius API and search for the song. If it can be found, it will scrape for the lyrics. AAfter that, the lyrics need to be preprocessed in a preprocessing pipeline, which will be looked at in depth in the following section. After the preprocessing, the song then can be analyzed using the CNN of the baseline project. After that the result will be stored in Elasticsearch
+If a user queries for a song, that is not yet in the database, the backend will access the Genius API and search for the song. If it can be found, it will scrape for the lyrics. After that, the lyrics need to be preprocessed in a preprocessing pipeline, which will be looked at in depth in the following section. After the preprocessing, the song then can be analyzed using the CNN of the baseline project. After that the result will be stored in Elasticsearch.
 
 ### TODO: Preprocessing pipeline
 
