@@ -29,11 +29,11 @@ See commit history.
 In the follwing picture, you can see the highlevel architecture of the project in regards to the technology stack that will be used. 
 <img src="images/architecture_highlevel.png" width="600"/>
 As you can see, the project relies on a classic 3-tier architecture (Frontend, Backend, Database (Although our database is layer is more sophisticated than in a normal architecture)). Each tier is hosted on a docker container. 
-The project harnesses React as frontend framework and FastAPI as backend. Furthermore, the backend relies on the Genius API to search for songs, that might not be included in the elasticsearch database yet. 
+The project harnesses React as frontend framework and FastAPI as backend. Furthermore, the backend relies on the Genius API to search for songs, that might have not yet been included in the elasticsearch database. 
 As storage solution the project relies on Elasticsearch in combination with Kibana for a better UI. In Elasticsearch, the songs will be stored alongside their according moods, so that after an initial classification, the mood of a song can be retrieved very quickly. 
 
 ##### use case 1: The song can be found in the DB
-The following image displays the use case wehere a song was found in Elasticsearch (The song has been already analyzed)
+The following image displays the use case where a song was found in Elasticsearch (The song has been already analyzed)
 
 <img src="images/architecture_uc_1.png" width="600"/>
 
@@ -42,7 +42,7 @@ As you can see, if the song can be found in elasticsearch, the backend will simp
 
 ##### use case 2: The song cannot be found in the DB
 
-The following image displays the use case wehere a song was not found in Elasticsearch (The song hasn't been analyzed yet)
+The following image displays the use case where a song was not found in Elasticsearch (The song hasn't been analyzed yet)
 
 <img src="images/architecture_uc_2.png" width="600"/>
 If a user queries for a song, that is not yet in the database, the backend will access the Genius API and search for the song. If it can be found, it will scrape for the lyrics. AAfter that, the lyrics need to be preprocessed in a preprocessing pipeline, which will be looked at in depth in the following section. After the preprocessing, the song then can be analyzed using the CNN of the baseline project. After that the result will be stored in Elasticsearch
