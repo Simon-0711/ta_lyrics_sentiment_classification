@@ -24,6 +24,12 @@ See commit history.
 
 
 #### TODO: Future planning 
+Which option did we chose and why. 
+What processing do we want to perform: 
+- bag of words
+- stop words 
+- frequency 
+- NMF
 
 
 #### High-level architecture description
