@@ -21,6 +21,17 @@ See commit history.
 
 ## Project state
 #### TODO: Planning state
+For the current planning state, we have two major options to choose from depending on the available data in order to recommend similar songs (sentiment) based on the input lyrics or song name. 
+
+*Option 1:*
+Most of the songs that are in the kaggle dataset are also found in the last.fm dataset. Therefore the kaggle songs can be labeled based on the user input found in the last.fm data. Using these labels we can train our own AI model using the labels as the gold labels for the model. New songs get classified by this model. Best matching songs for the same sentiment get ordered by cosine similarity in order to give the best recommendation for the same sentiment. 
+
+*Option 2:* 
+We are not able to label our songs from the kaggle dataset, since they are not included in the lastfm dataset.
+However we can determine similar songs based on combinations of cosine similarity, pearson, clustering and non negative matrix factorization (NMF).
+Furthermore it is possible to think of additionally labeling each songs sentiment based on new keywords we defined that were found often in the kaggle dataset.
+
+
 
 
 #### TODO: Future planning 
