@@ -47,7 +47,7 @@ Preprocessing for ML model:
 
 Preprocessing for recommendation basaed on cosine similarity after sentiment classification:
 - Countvectorizer 
-- Optional: TD-IDF
+- Optional: Term Frequency Inverse Document Frequency (TF-IDF)
 
 Other preprocessing steps are possible if required.
 
