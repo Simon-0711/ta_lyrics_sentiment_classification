@@ -84,7 +84,7 @@ If a user queries for a song that is not in the database yet, the backend will a
 For a detailed description of the data analysis performed please see *ta_lyrics_sentiment_classification/data_exploration/readme.md* as well as the jupyter notebooks found under *ta_lyrics_sentiment_classification/data_exploration/*.
 
 #### Experiments 
-<img src="images/no_experiments_meme.png" width="600"/>
+<img src="images/no_experiments_meme.png" width="300"/>
 
 ## Start guide
 Clone the repository and run from the root of it:
