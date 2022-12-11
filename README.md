@@ -21,7 +21,7 @@ See commit history.
 
 ## Project state
 #### Planning state
-For the current planning state, we have two major options to choose from depending on the available data in order to recommend similar songs (sentiment) based on the input lyrics or song name. 
+So far we have performed data analysis on lyrics and artist data from kaggle (see data analysis readme). Furthermore based on the labels found in the baseline paper for this project we have scraped the kaggle and last.fm dataset to see whether or not the lyrics are suitable for an ML driven sentiment classification approach. Based on the given datasets and planning state, we have two major options to choose from in order to recommend similar songs (sentiment) based on the input lyrics or song name given by the user. 
 
 *Option 1:*
 Most of the songs that are in the kaggle dataset are also found in the last.fm dataset. Therefore the kaggle songs can be labeled based on the user input found in the last.fm data. Using these labels we can train our own ML model using the labels as the gold labels for the model. New songs get classified by this model. Best matching songs for the same sentiment get ordered by cosine similarity in order to give the best recommendation for the same sentiment. 
