@@ -55,7 +55,10 @@ Other preprocessing steps are possible if required.
 
 #### High-level architecture description
 In the following picture, you can see the high level architecture of the project in regard to the technology stack that will be used. 
+
 <img src="images/architecture_highlevel.png" width="600"/>
+<br>
+
 As you can see, the project relies on a classic 3-tier architecture (Frontend, Backend, Database (Although our database is layer is more sophisticated than in a normal architecture)). Each tier is hosted on a docker container. 
 The project harnesses React as frontend framework and FastAPI as backend. Furthermore, the backend relies on the Genius API to search for songs that might have not yet been included in the Elasticsearch database. 
 As storage solution the project relies on Elasticsearch in combination with Kibana for a better UI. In Elasticsearch, the songs will be stored alongside their according moods, so that after an initial classification, the mood of a song can be retrieved very quickly. 
