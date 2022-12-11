@@ -38,9 +38,11 @@ Furthermore it is possible to think of additionally labeling each songs sentimen
 Based on further analysis, we found that xx percent of the songs in the kaggle dataset were also contained in the last.fm dataset. Therefore we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. 
 
 Preprocessing for ML model: 
-- Stop words 
-- Remove punctuation
+- Stop word removal
+- Punctuation removal
 - Lemmatization
+- Chorus normalization
+- Optional: Lyrics normalization
 
 Preprocessing for recommendation basaed on cosine similarity after sentiment classification:
 - Countvectorizer 
