@@ -38,11 +38,12 @@ Furthermore it is possible to think of additionally labeling each songs sentimen
 Based on further analysis, we found that xx percent of the songs in the kaggle dataset were also contained in the last.fm dataset. Therefore we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. 
 
 Preprocessing for ML model: 
-- Stop word removal
+- Tokenization
+- Stop word removal (English language)
 - Punctuation removal
 - Lemmatization
-- Chorus normalization
-- Optional: Lyrics normalization
+- Lyrics normalization (length, etc.)
+- Optional: Chorus normalization
 
 Preprocessing for recommendation basaed on cosine similarity after sentiment classification:
 - Countvectorizer 
@@ -74,16 +75,16 @@ The following image displays the use case in which a song was not found in Elast
 <img src="images/architecture_uc_2.png" width="600"/>
 If a user queries for a song that is not in the database yet, the backend will access the Genius API and search for the song. If it can be found, it will scrape for the lyrics. After that, the lyrics need to be preprocessed in a preprocessing pipeline, which will be presented in more depth in the following section. After the preprocessing, the song can be analyzed then using the CNN of the baseline project. After that the result will be stored in Elasticsearch.
 
-### TODO: Preprocessing pipeline
+**Preprocessing pipeline:** See section future planning above. 
 
 
 
-#### Data analysis 
+## Data analysis 
+#### Data Sources, Preprocessing and Basic Statistics
 For a detailed description of the data analysis performed please see *ta_lyrics_sentiment_classification/data_exploration/readme.md* as well as the jupyter notebooks found under *ta_lyrics_sentiment_classification/data_exploration/*.
 
-#### TODO (if available): Experiments 
-
-
+#### Experiments 
+<img src="images/no_experiments_meme.png" width="600"/>
 
 ## Start guide
 Clone the repository and run from the root of it:
