@@ -20,11 +20,11 @@ See commit history.
 
 
 ## Project state
-#### TODO: Planning state
+#### Planning state
 For the current planning state, we have two major options to choose from depending on the available data in order to recommend similar songs (sentiment) based on the input lyrics or song name. 
 
 *Option 1:*
-Most of the songs that are in the kaggle dataset are also found in the last.fm dataset. Therefore the kaggle songs can be labeled based on the user input found in the last.fm data. Using these labels we can train our own AI model using the labels as the gold labels for the model. New songs get classified by this model. Best matching songs for the same sentiment get ordered by cosine similarity in order to give the best recommendation for the same sentiment. 
+Most of the songs that are in the kaggle dataset are also found in the last.fm dataset. Therefore the kaggle songs can be labeled based on the user input found in the last.fm data. Using these labels we can train our own ML model using the labels as the gold labels for the model. New songs get classified by this model. Best matching songs for the same sentiment get ordered by cosine similarity in order to give the best recommendation for the same sentiment. 
 
 *Option 2:* 
 We are not able to label our songs from the kaggle dataset, since they are not included in the lastfm dataset.
@@ -34,13 +34,20 @@ Furthermore it is possible to think of additionally labeling each songs sentimen
 
 
 
-#### TODO: Future planning 
-Which option did we chose and why. 
-What processing do we want to perform: 
-- bag of words
-- stop words 
-- frequency 
-- NMF
+#### Future planning 
+Based on further analysis, we found that xx percent of the songs in the kaggle dataset were also contained in the last.fm dataset. Therefore we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. 
+
+Preprocessing for ML model: 
+- Stop words 
+- Remove punctuation
+- Lemmatization
+
+Preprocessing for recommendation basaed on cosine similarity after sentiment classification:
+- Countvectorizer 
+- Optional: TD-IDF
+
+Other preprocessing steps are possible if required.
+
 
 
 #### High-level architecture description
