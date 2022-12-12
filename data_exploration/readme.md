@@ -119,13 +119,13 @@ The approach to get gold labels for the mood of our songs was introduced in our 
 <img src="images/moods.png" width="600"/>
 
 (Due to technical issues we can only perform the analysis on two thirds of the dataset until the milestone is due. We will submit the analysis for the whole dataset in the near future).
-Overall ~94,7 % of our 127.590 scraped songs could be found on lastfm. 
-Furthermore ~77,7 % of the songs, which were analyzed have labels.
+Overall ~93,4 % of our 191.387 scraped songs could be found on lastfm. 
+Furthermore ~78,0 % of the songs, which were analyzed have labels.
 However, since not every label is useful to us, we need to filter further on the "useful" labels, which are the keywords already describe above. 
 
 <img src="images/moods_on_songs.png" width="600"/>
 
-As you can see ~14,91 % of the songs have a useful label. This ratio can be increased further by modifying the keywords. The below depiction for instance accepted all labels that contain the keyword. For example the label "a very happy song, which i like" is in this approach counted towards the keyword "happy", which hasn't been done in the beforehand approach. This enabled us to reach a rate of 24,9 % of all songs being labeled "usefully".
+As you can see ~15,02 % of the songs have a useful label. This ratio can be increased further by modifying the keywords. The below depiction for instance accepted all labels that contain the keyword. For example the label "a very happy song, which i like" is in this approach counted towards the keyword "happy", which hasn't been done in the beforehand approach. This enabled us to reach a rate of 24,58 % of all songs being labeled "usefully".
 
 <img src="images/moods_on_songs_advanced.png" width="600"/>
 
