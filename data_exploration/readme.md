@@ -134,21 +134,28 @@ This leads to the assumption that either, we would need to adjust the keywords s
 
 
 ### Analyzing the lastfm labels 
-Another approach of getting gold labels for our songs is to harness the last.fm dataset and search for the user created tags for each song. This approach was introduced in our baseline project. 
-Overall xxx % of our uuuu songs could be found on lastfm. 
+Another approach of getting gold labels for our songs is to harness the last.fm dataset and search for the user created tags for each song. This approach was introduced in our baseline project (Due to technical issues we can only perform the analysis on 2 two thirds of the dataset until the milestone is due. We will submit the analysis for the whole dataset in the near future).
+Overall ~94,7 % of our 127.590 scraped songs could be found on lastfm. 
+Furthermore ~77,7 % of the songs, which were analyzed have labels.
+However, since not every label is useful to us, we need to filter further on the "useful" labels, which are the keywords already describe above. 
+
+<img src="images/moods_on_songs.png" width="600"/>
+
+As you can see ~14,91 % of the songs have a useful label. This percentage can be increased further by modifying the keywords. The below depiction for instance accepted all labels which have the keyword in it. For example the label "a very happy song, which i like" is in this approach counted towards the keyword "happy", which hasn't been done in the beforehand approach. This enabled us to reach a rate of 24,9 % of all songs beinog labeled "usefully".
+
+<img src="images/moods_on_songs_advanced.png" width="600"/>
 
 
-todo: percentage of songs with labels
-This image depicts the ammount of songs that are labeled.
-Overall yyy % of the songs have labels.
 
 
 
-todo: percentage of useful labeled songs
+However, as you can also see, this approach reshapes also the distribution of moods in the dataset, which needs to be kept in mind for the training of our ML model.
+Baseline approach:
+<img src="images/mood_keywords.png" width="600"/>
 
-However, since not every label is useful to us, we need to filter further on the "useful" labels, which are the keywords already describe above. As yoz can see zzzz % of the songs have a useful label. This percentage can be increased further to uuuuu % by modifying the keywords. The beow approach for isntance accepted all labels which have the keyword in it. For example the label "a very happy song, which i like" is in this approach counted towards the keyword "happy", which hasn't been done in the beforehand approach. 
+Advanced approach:
+<img src="images/mood_keywords_advanced.png" width="600"/>
 
-todo: percentage of useful labeled songs with advanced keywords
 
 
 
