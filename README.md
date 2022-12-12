@@ -35,7 +35,13 @@ Furthermore it is possible to think of additionally labeling each songs sentimen
 
 
 #### Future planning 
-Based on further analysis, we found that most of the songs in the kaggle dataset were also contained in the last.fm dataset. Therefore we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. 
+TODO: How many % are included ? Reference to the analysis section
+Add section to readme of data analysis on lastfm labels
+
+
+
+As you can see in our data analysis, we found that xxx % of the songs in the kaggle dataset are contained in the last.fm dataset. Furthermore, yyy % of the songs are tagged with labels, which we can interpreate as moods. This percentage can be even expanded further to zzz % by modifying the keywords for the moods. 
+This presents us a solid base of training data. Hence we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. 
 
 Preprocessing for ML model: 
 - Tokenization

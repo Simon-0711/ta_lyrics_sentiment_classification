@@ -133,6 +133,25 @@ These show us, that overall many songs could not be labeled correctly, harnessin
 This leads to the assumption that either, we would need to adjust the keywords so that we can label more songs in total, or that factors like stemming will play an important role for this project, to increase the number of labelable songs. The consideration and implementation of these 2 is part of the preprocessing and won't be discussed further here. 
 
 
+### Analyzing the lastfm labels 
+Another approach of getting gold labels for our songs is to harness the last.fm dataset and search for the user created tags for each song. This approach was introduced in our baseline project. 
+Overall xxx % of our uuuu songs could be found on lastfm. 
+
+
+todo: percentage of songs with labels
+This image depicts the ammount of songs that are labeled.
+Overall yyy % of the songs have labels.
+
+
+
+todo: percentage of useful labeled songs
+
+However, since not every label is useful to us, we need to filter further on the "useful" labels, which are the keywords already describe above. As yoz can see zzzz % of the songs have a useful label. This percentage can be increased further to uuuuu % by modifying the keywords. The beow approach for isntance accepted all labels which have the keyword in it. For example the label "a very happy song, which i like" is in this approach counted towards the keyword "happy", which hasn't been done in the beforehand approach. 
+
+todo: percentage of useful labeled songs with advanced keywords
+
+
+
 ### Weird Artist Names
 One last thing to consider for preprocessing are some of the artist names. 
 As seen in the following figure, artist names also include movie titles. This needs to be filtered in some way during the preprocessing. 
