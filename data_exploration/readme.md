@@ -12,8 +12,8 @@ First of all, let's look at the contained languages: <br>
 
 As you can seen in the distribution, most songs in the dataset are either written in English or Portuguese. Overall, 53 languages exist in the dataset itself. However as stated before, only Portuguese and English make up the most relevant part of the data. We will limit the project to English songs, as this simplifies the mood classification significantly.
 
-After filtering the lyrics dataset to English, we need to look at the general information of the data, such as number of rows, contained columns, non-null count, datatypes, etc.: 
-There are 191814 rows and 5 columns in the filtered df.
+After filtering the lyrics dataset to English, we need to look at the general information of the data, such as number of rows, contained columns, non-null count, data types, etc.: 
+There are 191814 rows and 5 columns in the filtered dataframe.
 The following image shows the contained columns and there Non-Null value counts. 
 
 <img src="images/lyrics_info.png" width="300"/>
@@ -87,8 +87,8 @@ Another interesting metric is to look at is the length of the songs, as depicted
 <img src="images/gaussian_wordcount.png" width="600"/>
 <img src="images/median_wordcount.png" width="600"/>
 
-As you can see, there is quite a variance in the dataset overall. The minimum value is 1, whereas the maximum value is 3422. 
-However, as you can also see, 50% of the songs have a word count of roughly 200 - 300 words per song, with a variance reaching from 1 to ~500, so the variance drastically decreases there, compared to the overall data.
+As you can see, there is big span in the word count of the songs in the dataset. The minimum value is 1, whereas the maximum value is 3422. 
+However, as you can also see, 50% of the songs have a word count of roughly 200 - 300 words per song, with a variance of approximately 250.
 The average of the amount of words in a song is about 250, the median is at 211.
 
 Since the minimum value word count is 1, we looked closer into the specific lyrics with just one word and found out that this is not due to the Tequila song but rather due to instrumental songs, which are just represented as "Instrumental", "instrumental", ... as their lyrics. In total 5027 songs are instrumental, which is about 1.323 % of all songs, as you can see in the following figure:
@@ -98,11 +98,11 @@ In the preprocessing step, we will filter the instrumental songs out.
 ### Song redundancy
 We discovered two forms of song redundancy. First of all, songs that are from a collaboration of different artist appear mostly twice in the dataset, e.g., the song "The Monster" from Eminem features by Rihanna. 
 <img src="images/handling_feat_songs.png" width="600"/>
-TODO: Here, we would remove the song at the featuring artist to reduce the stored data of our dataset || Here, we would still keep the song for all collaborating arists, since it makes no difference for the lyrics mood classification and enhances the probability of finding the song in our dataset from user perspective, e.g., when the user searches for the song name and enters the featuring artist instead of the main artist.]
+Here, we will remove the song that does not contain labels in the last.fm dataset. If both contain labels, then we will remove the song from the featuring artist, since we do not want to train twice on the same song.
 
 Furthermore, some lyrics are not entered correctly and contain rather metadata instead of the actual lyrics. This leads to lyrics redundancy. This is specifically the case for certain artists, e.g. Donovan Leitch, which has the same metadata lyrics for 19 songs:
 <img src="images/song_redundancy.png" width="980"/>
-Here, we would need to filter the incorrect as well as the redundant lyrics in the preprocessing step as well.
+Here, we would need to filter the incorrect as well as the redundant lyrics in the preprocessing step.
 
 
 ### Comparing lyrics
@@ -112,36 +112,20 @@ And this compared to the lyrics stored under Rihanna:
 <img src="images/rihanna_lyrics_the_monster.png" width="980"/>
 When applying the SequenceMatcher.ratio() to evaluate both lyrics quantitatively, the obtained ratio is 16.567 %. This shows that there are have quite some differences in the lyrics regarding their text representation. When looking closer, it gets obvious why the text ratio differs so greatly. Eminem's lyrics of "The Monster" is 3453 characters long, whereas Rihanna's lyrics is only 2728 characters long. To find out why the text have this difference in length we look into both lyrics and see that in Rihanna's song lyrics some parts are marked with "[Hook]". This means that the hook got defined once in the beginning and then is just represented in the text by "[Hook]" when the hook was repeated. Therefore, we need to face this during text preprocessing, e.g., by replacing "[Hook]" with the actual text for all occurrences, as well as for other definitions like [Verse 1] that we encounter in the song lyrics.
 
-### Analyzing the CNN keywords
 
-Since this project relies on the CNN provided by (https://github.com/workmanjack/lyric-mood-classification), it is useful, to take a look at their labeling technique. 
-They used overall 18 different moods with customly set keywords, which indicate that for a given song a specific mood is represented. The following graphic depicts the moods and their keywords:
+### Analyzing the lastfm labels 
+The approach to get gold labels for the mood of our songs was introduced in our baseline project (https://github.com/workmanjack/lyric-mood-classification). They harnessed the last.fm dataset, searched for the user created tags for each song, and assigned a mood to the song if the song contains at least one keyword mapped to a specific mood. They used overall 18 different moods. The following graphic depicts the moods and their keywords:
 
 <img src="images/moods.png" width="600"/>
 
-If we now take a look at the occurrences of these keywords in our song texts, we get this overall distribution:
-
-<img src="images/keywords.png" width="600"/>
-
-As you can see, most of the songs are "depressed", followed by "desire" and "anger", according to the occurrences of keywords, introduced by our baseline project.
-If we know take a look at the overall classification of songs according to the keyword occurrences, we get these 2 graphs:
-
-<img src="images/relative_keywords.png" width="600"/>
-<img src="images/mood_classification.png" width="600"/>
-
-These show us, that overall many songs could not be labeled correctly, harnessing the keywords of our baseline project. 
-This leads to the assumption that either, we would need to adjust the keywords so that we can label more songs in total, or that factors like stemming will play an important role for this project, to increase the number of labelable songs. The consideration and implementation of these 2 is part of the preprocessing and won't be discussed further here. 
-
-
-### Analyzing the lastfm labels 
-Another approach of getting gold labels for our songs is to harness the last.fm dataset and search for the user created tags for each song. This approach was introduced in our baseline project (Due to technical issues we can only perform the analysis on 2 two thirds of the dataset until the milestone is due. We will submit the analysis for the whole dataset in the near future).
+(Due to technical issues we can only perform the analysis on two thirds of the dataset until the milestone is due. We will submit the analysis for the whole dataset in the near future).
 Overall ~94,7 % of our 127.590 scraped songs could be found on lastfm. 
 Furthermore ~77,7 % of the songs, which were analyzed have labels.
 However, since not every label is useful to us, we need to filter further on the "useful" labels, which are the keywords already describe above. 
 
 <img src="images/moods_on_songs.png" width="600"/>
 
-As you can see ~14,91 % of the songs have a useful label. This percentage can be increased further by modifying the keywords. The below depiction for instance accepted all labels which have the keyword in it. For example the label "a very happy song, which i like" is in this approach counted towards the keyword "happy", which hasn't been done in the beforehand approach. This enabled us to reach a rate of 24,9 % of all songs beinog labeled "usefully".
+As you can see ~14,91 % of the songs have a useful label. This ratio can be increased further by modifying the keywords. The below depiction for instance accepted all labels that contain the keyword. For example the label "a very happy song, which i like" is in this approach counted towards the keyword "happy", which hasn't been done in the beforehand approach. This enabled us to reach a rate of 24,9 % of all songs being labeled "usefully".
 
 <img src="images/moods_on_songs_advanced.png" width="600"/>
 
@@ -155,7 +139,7 @@ Baseline approach:
 
 Advanced approach:
 <img src="images/mood_keywords_advanced.png" width="600"/>
-
+Still we need to take a closer look on how we can prevent words like "unhappy" being counted in the mood "happy" (as well as for the other moods). This will be done in the following weeks.
 
 
 

@@ -1,4 +1,4 @@
-# Data Science for Text Analytics Project
+# Project: Data Science for Text Analytics
 ## Project details
 #### Title: 
 A Song Recommendation System using Lyrics Sentiment Classification
@@ -13,7 +13,6 @@ In this project we will use the Github project https://github.com/workmanjack/ly
 
 #### Utilized libraries
 The utilized libraries can be found in our requirements.txt file in the root of our Github project. In general, the code of our project can be started by simply using the command ``` docker-compose up ```, which installs, builds and starts all necessary services and libraries. Only docker (preferably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your system.
-TODO: Update requirements.txt with utilized packages.
 
 #### Contributions
 See commit history. 
@@ -24,7 +23,7 @@ See commit history.
 So far we have performed data analysis on lyrics and artist data from kaggle (see data analysis readme). Furthermore based on the labels found in the baseline paper for this project we have scraped the kaggle and last.fm dataset to see whether or not the lyrics are suitable for an ML driven sentiment classification approach. Based on the given datasets and planning state, we have two major options to choose from in order to recommend similar songs (sentiment) based on the input lyrics or song name given by the user. 
 
 *Option 1:*
-Most of the songs that are in the kaggle dataset are also found in the last.fm dataset. Therefore the kaggle songs can be labeled based on the user input found in the last.fm data. Using these labels we can train our own ML model using the labels as the gold labels for the model. New songs get classified by this model. Best matching songs for the same sentiment get ordered by cosine similarity in order to give the best recommendation for the same sentiment. 
+Most of the songs that are in the kaggle dataset are also found in the last.fm database (accessible via last.fm API). Therefore the kaggle songs can be labeled based on the user input found in the last.fm data. Using these labels we can train our own ML model using the labels as the gold labels for the model. New songs get classified by this model. Best matching songs for the same sentiment get ordered by cosine similarity in order to give the best recommendation for the same sentiment. 
 
 *Option 2:* 
 We are not able to label our songs from the kaggle dataset, since they are not included in the lastfm dataset.
@@ -33,11 +32,10 @@ Furthermore it is possible to think of additionally labeling each songs sentimen
 
 
 
-
 #### Future planning 
 
-As you can see in our data analysis, we found that ~94 % of the songs in the kaggle dataset are contained in the last.fm dataset. Furthermore, ~ 14,91 % of the songs are tagged with labels, which we can interpreate as moods. This percentage can be even expanded further to 24,9 % by modifying the keywords for the moods. 
-This may not seem like much, however, since our overall database is shy of 200.00 songs, this presents us a solid base of training data. Hence we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. For the complete analysis on the distributions, please referre to our data analysis.
+As you can see in our data analysis, we found that ~94 % of the songs in the kaggle dataset are contained in the last.fm dataset. Furthermore, we can assign moods based on the labels found in the last.fm dataset for ~ 14,91 % of all songs. After first adjustments, the ratio can be even expanded to 24,9 % by modifying the keywords for the moods. 
+This may not seem like much, however, since our overall database consists of 200.00 songs, this presents us a solid base of training data. Hence we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. For the complete analysis on the distributions, please refer to our data analysis.
 
 Following a short depiction of our aimed preprocessing steps for our ML model: 
 - Tokenization
@@ -47,8 +45,8 @@ Following a short depiction of our aimed preprocessing steps for our ML model:
 - Lyrics normalization (length, etc.)
 - Optional: Chorus normalization
 
-Preprocessing for recommendation basaed on cosine similarity after sentiment classification:
-- Countvectorizer 
+Preprocessing for recommendation based on cosine similarity after sentiment classification:
+- Count-Vectorizer 
 - Optional: Term Frequency Inverse Document Frequency (TF-IDF)
 
 Other preprocessing steps are possible if required.
