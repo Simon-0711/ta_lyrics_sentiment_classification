@@ -34,7 +34,7 @@ Furthermore it is possible to think of additionally labeling each songs sentimen
 
 #### Future planning 
 
-As you can see in our data analysis, we found that ~94 % of the songs in the kaggle dataset are contained in the last.fm dataset. Furthermore, we can assign moods based on the labels found in the last.fm dataset for ~ 14,91 % of all songs. After first adjustments, the ratio can be even expanded to 24,9 % by modifying the keywords for the moods. 
+As you can see in our data analysis, we found that ~ 93,4 % of the songs in the kaggle dataset are contained in the last.fm dataset. Furthermore, we can assign moods based on the labels found in the last.fm dataset for ~ 15,02 % of all songs. After first adjustments, the ratio can be even expanded to 24,58 % by modifying the keywords for the moods. 
 This may not seem like much, however, since our overall database consists of 200.00 songs, this presents us a solid base of training data. Hence we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. For the complete analysis on the distributions, please refer to our data analysis.
 
 Following a short depiction of our aimed preprocessing steps for our ML model: 
