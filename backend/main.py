@@ -1,8 +1,7 @@
-from fastapi import FastAPI
+from configuration import config
+from configuration.config import app as app
 
-app = FastAPI()
 
-
-@app.get("/")
+@app.get("/dummy-endpoint")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello from the fastAPI backend!"}
