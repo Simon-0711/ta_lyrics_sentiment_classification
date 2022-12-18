@@ -62,20 +62,21 @@ body {
     border-radius: 1.5rem;
 }
 
-div.songNameInput input {
+div.searchInput input {
     font-family: 'Inconsolata', serif;
     font-weight: 400;
     font-size: 1.1rem;
     color: #3b3b3b;
-    width: 30rem;
+    width: 20rem;
     height: 2rem;
     padding: 0 1rem 0 1rem;
     border-radius: 1rem;
     border: 2px solid #DBDBDB;
     outline: none;
+    margin: 0 0.5rem 0 0.5rem;
 }
 
-div.songNameInput {
+div.searchInput {
     display: block;
     margin-left: auto;
     margin-right: auto;
