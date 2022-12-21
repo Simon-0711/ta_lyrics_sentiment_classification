@@ -17,5 +17,16 @@ class Song(BaseModel):
 
 @app.post("/search")
 async def search(Song: Song, Artist: Artist):
+    """
+        Function that gets song and artist name from frontend in JSON as such:
+        {
+            "Song": {
+                "name": "ABCD"
+            },
+            "Artist": {
+                "name": "Artist_name"
+            }
+        }
+    """
     # search for song here 
     return {"Song": Song, "Artist": Artist}
