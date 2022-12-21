@@ -1,7 +1,6 @@
-FROM alpine:latest
-
-RUN apk add python3
-RUN python3 -m ensurepip --upgrade
+FROM ubuntu:latest
+RUN apt update -y && apt upgrade -y
+RUN apt install gcc python3 python3-pip -y
 RUN python3 -m pip install fastapi[all]
 COPY ./backend/requirements.txt /tmp/requirements.txt
 RUN python3 -m pip install -r /tmp/requirements.txt
