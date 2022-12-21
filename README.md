@@ -91,6 +91,10 @@ For a detailed description of the data analysis performed please see *ta_lyrics_
 
 ## Start guide
 Clone the repository and run from the root of it:
+(You will need the package gnupg for it)
+```  gpg -o backend/fastapi/secrets/genius_api_secret -d backend/fastapi/secrets/genius_api_secret.gpg ```
+You will be asked for the password to decrypt this file.
+Afterwards run:
 ``` docker-compose up ```
 This will start up the docker containers specified in the docker-compose file.
 After that you should be able to see them with ``` docker ps ```. 

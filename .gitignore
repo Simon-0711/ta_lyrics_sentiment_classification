@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Ignore secret plain
+backend/fastapi/secrets/genius_api_secret
+
 # Ignore nodejs
 node_modules
 node_modules/
