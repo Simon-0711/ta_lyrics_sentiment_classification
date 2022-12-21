@@ -35,10 +35,11 @@ export default function Main() {
             // Send to fast api
             console.log("Sending song and artist to fastapi...")
             console.log(JSON.stringify({ song_name: song_name, artist_name: artist_name }))
-            console.log(postData(
+            const response = postData(
                 "http://localhost:8000/search",
                 JSON.stringify({ song_name: song_name, artist_name: artist_name })
-            ))
+            )
+            console.log(response)
             console.log("Request finished...")
         } else {
             // Display error message
