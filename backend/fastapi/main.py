@@ -45,6 +45,8 @@ async def search(body: Body):
 
     
     # TODO: Send to elastic search
+    # TODO: get recommendations
+    
     return {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics}
 
 
