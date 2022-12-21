@@ -1,15 +1,31 @@
-def tokenization(text: str) -> str:
+import spacy
+
+def tokenization(text: str) -> list:
     """Use this function to tokenize text.
 
     :param text: Text to tokenize
     :type text: string
-    :return: Tokenized text
-    :rtype: str
+    :return: Tokenized text as list
+    :rtype: list[str]
     """
-    return print("Tokenized")
+    nlp = spacy.load("en_core_web_sm", disable = ['ner'])
+    print(nlp.pipe_names)
 
 
-def stop_word_removal(text: str) -> str: 
+    word_list = []
+
+    # Iterate over the spoken words (Hint: df_script) and append the lemmatized tokens as detailed above
+    # test_string = ["This is just a sample text and texts for the purpose of testing"]
+    for doc in list(nlp.pipe(text)): 
+        # iterate over tokens in docs
+        for token in doc:
+            # Add token to list
+            word_list.append(token)
+
+    return word_list
+
+
+def stop_word_removal(text: list) -> list: 
     """Use this function to remove stop words. 
 
     :param text: Text to remove stop words from 
@@ -17,10 +33,19 @@ def stop_word_removal(text: str) -> str:
     :return: Text without stop words
     :rtype: str
     """
-    return print("Stop words removed")
+
+    word_list = []
+
+    # Don't add token to list if punctuation or stop word
+    for token in text:
+        if token.is_stop == False: 
+            word_list.append(token)
 
 
-def punctutation_removal(text: str) -> str: 
+    return word_list
+
+
+def punctutation_removal(text: list) -> list: 
     """Use this function to remove punctuation.
 
     :param text: Text to remove punctuation from
@@ -28,10 +53,17 @@ def punctutation_removal(text: str) -> str:
     :return: Text without punctuation
     :rtype: str
     """
-    return print("Punctuation removed")
+
+    word_list = []
+    
+    for token in text:
+        if token.is_punct == False
+            word_list.append(token)
+
+    return word_list
 
 
-def lemmatization(text: str) -> str: 
+def lemmatization(text: list) -> list: 
     """Use this function to lemmatize a given text.
 
     :param text: Text to lemmatize
@@ -39,7 +71,13 @@ def lemmatization(text: str) -> str:
     :return: lemmatized text
     :rtype: str
     """
-    return print("Lemmatized")
+
+    word_list = []
+
+    for token in text: 
+        word_list.append(token.lemma_)
+        
+    return word_list
 
 
 def processing_pipeline(song_data: dict) -> dict:
