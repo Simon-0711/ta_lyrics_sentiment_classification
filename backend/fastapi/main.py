@@ -2,6 +2,8 @@ from configuration import config
 from configuration.config import app as app
 from pydantic import BaseModel
 import lyricsgenius as genius  # https://github.com/johnwmillr/LyricsGenius
+from fastapi import FastAPI, HTTPException
+
 
 
 @app.get("/dummy-endpoint")
@@ -9,33 +11,31 @@ async def root():
     return {"message": "Hello from the fastAPI backend!"}
 
 
-class Artist(BaseModel):
-    name: str
-
-class Song(BaseModel):
-    name: str
+class Body(BaseModel):
+    song_name: str
+    artist_name: str
+    
 
 
 @app.post("/search")
-async def search(Song: Song, Artist: Artist):
+async def search(body: Body):
     """
         Function that gets song and artist name from frontend in JSON as such:
         {
-            "Song": {
-                "name": "ABCD"
-            },
-            "Artist": {
-                "name": "Artist_name"
-            }
+            song_name: "songname",
+            artist_name: "artist"
         }
     """
     # read in the api key after it has been encrypted by you
     with open('secrets/genius_api_secret', 'r') as file:
         api_token = file.read()
 
+    song = body.song_name
+    artist = body.artist_name
+
     api = genius.Genius(api_token)
     try:
-        lyrics = api.search_song(Song.name, Artist.name)
+        lyrics = api.search_song(song, artist)
     except:
         raise HTTPException(status_code=500, detail="Error during scraping of the lyrics")
 
@@ -43,8 +43,10 @@ async def search(Song: Song, Artist: Artist):
     if lyrics is None:
         raise HTTPException(status_code=404, detail="Lyrics for Song not found")
 
-
+    
     # TODO: Send to elastic search
-    return {"Song": Song, "Artist": Artist, "Lyrics": lyrics.lyrics}
+    # TODO: get recommendations
+    
+    return {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics}
 
 
