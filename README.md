@@ -103,10 +103,10 @@ docker-compose stop
 ```
 
 The startup may take a while. When the appearing log messages in the terminal are stalling, the app should be ready to use.
-Kibana is accessed by http://localhost:5601
-Elasticsearch is accessed by http://localhost:9200
-FastAPI is accessed by http://localhost:8000
-FastAPI is accessed by http://localhost:3000
+- Kibana is accessed by http://localhost:5601
+- Elasticsearch is accessed by http://localhost:9200
+- FastAPI is accessed by http://localhost:8000
+- React is accessed by http://localhost:3000
 
 ### Start up only certain services
 To start only certain services like FastAPI, Elasticsearch or Kibana, you can use the following command:

@@ -48,20 +48,6 @@ body {
     -moz-transform: scale(1.05, 1.05);
 }
 
-#songNameInput {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5rem;
-    font-family: 'Inconsolata', serif;
-    font-weight: 400;
-    font-size: 1.3em;
-    width: 30rem;
-    height: 3rem;
-    border: 2px solid #DBDBDB;
-    border-radius: 1.5rem;
-}
-
 div.searchInput input {
     font-family: 'Inconsolata', serif;
     font-weight: 400;
@@ -82,4 +68,14 @@ div.searchInput {
     margin-right: auto;
     margin-top: 5rem;
     text-align: center;
+}
+
+#errorMissingInput {
+    display: block;
+    text-align: center;
+    margin-top: 5rem;
+    font-family: 'Inconsolata', serif;
+    font-weight: 400;
+    font-size: 1.3em;
+    color: #ff0000;
 }
