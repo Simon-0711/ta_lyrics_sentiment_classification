@@ -7,14 +7,12 @@ index_name = "lyrics_mood_classification"
 
 
 def add_es_document(song_name, artist_name, lyrics, mood):
-    # TODO: Edit docstring
-    """Scrape lyrcis on Genius and returns the lyrics.
+    """Add document to Elasticsearch index.
 
-    :param song_name: song name of the lyrics we want to scrape.
-    :param artist_name: artist name of the lyrics we want to scrape.
-
-    :return: Lyrics of given song and artist name.
-    :rtype: String or None
+    :param song_name: song name of the document entry.
+    :param artist_name: artist name of the document entry.
+    :param lyrics: artist name of the document entry.
+    :param mood: mood of the document entry.
     """
 
     # TODO: Add authentication for elasticsearch?
@@ -35,15 +33,16 @@ def add_es_document(song_name, artist_name, lyrics, mood):
               })
     id_counter += 1
 
+    # TODO: Add return with information if adding document worked or not
+
 
 def get_stored_mood_of_song(song_name, artist_name):
-    # TODO: Edit docstring
-    """Search in Elasticsearch index for the song and returns the mood if.
+    """Search in Elasticsearch index for the song and return the mood if already stored.
 
-    :param song_name: song name of the lyrics we want to scrape.
-    :param artist_name: artist name of the lyrics we want to scrape.
+    :param song_name: song name of the document entry.
+    :param artist_name: artist name of the document entry.
 
-    :return: Lyrics of given song and artist name.
+    :return: Mood of given song and artist name if stored in Elasticsearch index. Else None.
     :rtype: String or None
     """
 
@@ -54,23 +53,26 @@ def get_stored_mood_of_song(song_name, artist_name):
         hosts=es_host
     )
 
-    # Check index for new song
-    # TODO: Could also use match instead of query for better chances to find the document if song_name in es contains, e.g. feat artist in song name
+    # Search for song in es index
+    # TODO: Change "match" to "term"?
     result = es.search(index=index_name, query={"bool": {"must": [
-        {"term": {"song_name": song_name}}, {"term": {"artist_name": artist_name}}]}})
+        {"match": {"song_name": song_name}}, {"match": {"artist_name": artist_name}}]}})
 
-    # TODO: Return the mood from the result
-    # return
+    # Check if a song has been found
+    if result["hits"]["total"]["value"] > 0:
+        # TODO: How to handle multiple songs that have been found?
+        return result["hits"]["hits"][0]["_source"]["mood"]
+    else:
+        return None
 
 
 def get_stored_lyrics_of_song(song_name, artist_name):
-    # TODO: Edit docstring
-    """Search in Elasticsearch index for the song and returns the mood if.
+    """Search in Elasticsearch index for the song and return the lyrics if already stored.
 
-    :param song_name: song name of the lyrics we want to scrape.
-    :param artist_name: artist name of the lyrics we want to scrape.
+    :param song_name: song name of the document entry.
+    :param artist_name: artist name of the document entry.
 
-    :return: Lyrics of given song and artist name.
+    :return: Lyrics of given song and artist name if stored in Elasticsearch index. Else None.
     :rtype: String or None
     """
 
@@ -81,10 +83,14 @@ def get_stored_lyrics_of_song(song_name, artist_name):
         hosts=es_host
     )
 
-    # Check index for new song
-    # TODO: Could also use match instead of query for better chances to find the document if song_name in es contains, e.g. feat artist in song name
+    # Search for song in es index
+    # TODO: Change "match" to "term"?
     result = es.search(index=index_name, query={"bool": {"must": [
-        {"term": {"song_name": song_name}}, {"term": {"artist_name": artist_name}}]}})
+        {"match": {"song_name": song_name}}, {"match": {"artist_name": artist_name}}]}})
 
-    # TODO: Return the lyrics from the result
-    # return
+    # Check if a song has been found
+    if result["hits"]["total"]["value"] > 0:
+        # TODO: How to handle multiple songs that have been found?
+        return result["hits"]["hits"][0]["_source"]["lyrics"]
+    else:
+        return None
