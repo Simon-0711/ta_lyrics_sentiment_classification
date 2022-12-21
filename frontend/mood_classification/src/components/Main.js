@@ -22,6 +22,14 @@ export default function Main() {
             console.log(song_name)
             console.log(artist_name)
             setWrongInputIsShown(false)
+            fetch('http://localhost:8000/search', {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ song_name: "song", artist_name: "artist"  })
+              })
         } else {
             setWrongInputIsShown(true)
         }
