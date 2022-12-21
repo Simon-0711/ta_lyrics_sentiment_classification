@@ -15,14 +15,33 @@ export default function Main() {
         set_artist_name(input_box_input.target.value)
     }
 
+    async function postData(url = '', data = {}) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: data
+        })
+        return response.json();
+    }
+
     // Function to send song and artist name to fast api
     function sendToFastApi(song_name, artist_name) {
         if ((song_name) && (artist_name)) {
-            // send to fast api
-            console.log(song_name)
-            console.log(artist_name)
+            // Don't display error message
             setWrongInputIsShown(false)
+            // Send to fast api
+            console.log("Sending song and artist to fastapi...")
+            console.log(JSON.stringify({ song_name: song_name, artist_name: artist_name }))
+            console.log(postData(
+                "http://localhost:8000/search",
+                JSON.stringify({ song_name: song_name, artist_name: artist_name })
+            ))
+            console.log("Request finished...")
         } else {
+            // Display error message
             setWrongInputIsShown(true)
         }
     }
