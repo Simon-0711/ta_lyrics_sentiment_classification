@@ -13,6 +13,15 @@ export default function Main() {
         set_artist_name(input_box_input.target.value)
     }
 
+    // Function to send song and artist name to fast api
+    function sendToFastApi(song_name, artist_name) {
+        if ((song_name) && (artist_name)) {
+            // send to fast api
+            console.log(song_name)
+            console.log(artist_name)
+        }
+    }
+
     return (
         <div id='mainDiv'>
             <h1 id='mainHeader'>Looking for similar Songs?</h1>
@@ -22,7 +31,7 @@ export default function Main() {
                 <input type="text" name="inputSong" id="inputSong" required spellCheck="false" placeholder='Song Name' onChange={getSongName}></input>
                 <input type="text" name="inputArtist" id="inputArtist" required spellCheck="false" placeholder='Artist Name' onChange={getArtistName}></input>
             </div>
-            <button id='searchSimilarLyricsButton' name="searchLyrics">Find Similar Songs</button>
+            <button id='searchSimilarLyricsButton' name="searchLyrics" onClick={() => sendToFastApi(song_name, artist_name)}>Find Similar Songs</button>
         </div >
     )
 }
