@@ -1,9 +1,10 @@
 from elasticsearch import Elasticsearch
 
+# Set Elasticsearch index name
+index_name = "lyrics_mood_classification"
+
 # Initialize id counter
 id_counter = 0
-
-index_name = "lyrics_mood_classification"
 
 
 def add_es_document(song_name, artist_name, lyrics, mood):
@@ -14,6 +15,8 @@ def add_es_document(song_name, artist_name, lyrics, mood):
     :param lyrics: artist name of the document entry.
     :param mood: mood of the document entry.
     """
+
+    global id_counter, index_name
 
     # TODO: Add authentication for elasticsearch?
     es_host = "http://localhost:9200"
@@ -46,6 +49,8 @@ def get_stored_mood_of_song(song_name, artist_name):
     :rtype: String or None
     """
 
+    global index_name
+
     # TODO: Add authentication for elasticsearch?
     es_host = "http://localhost:9200"
 
@@ -75,6 +80,8 @@ def get_stored_lyrics_of_song(song_name, artist_name):
     :return: Lyrics of given song and artist name if stored in Elasticsearch index. Else None.
     :rtype: String or None
     """
+
+    global index_name
 
     # TODO: Add authentication for elasticsearch?
     es_host = "http://localhost:9200"
