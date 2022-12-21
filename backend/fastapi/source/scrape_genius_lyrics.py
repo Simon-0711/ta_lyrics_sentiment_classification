@@ -1,7 +1,5 @@
 import lyricsgenius as genius  # https://github.com/johnwmillr/LyricsGenius
 
-LYRICS_DIR = "../data/genius_lyrics"
-
 
 def scrape_lyrics(song_name, artist_name):
     """Scrape lyrcis on Genius and returns the lyrics.
