@@ -1,0 +1,18 @@
+FROM elasticsearch:7.17.7
+
+RUN apt update -y && apt upgrade -y
+RUN apt install python3 -y
+RUN apt-get install python3-pip -y
+
+COPY ./elasticsearch/create_es_index.py /tmp/create_es_index.py
+COPY ./elasticsearch/startup.sh /tmp/startup.sh
+
+# use this script later to ensure es is running 
+COPY ./elasticsearch/wait-for-it.sh /tmp/wait-for-it.sh
+RUN chmod 777 /tmp/wait-for-it.sh /tmp/create_es_index.py /tmp/startup.sh
+RUN chown elasticsearch:elasticsearch /tmp/wait-for-it.sh /tmp/create_es_index.py /tmp/startup.sh
+
+COPY ./elasticsearch/requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
+Entrypoint  ["/bin/tini", "--", "/tmp/startup.sh"]
+
