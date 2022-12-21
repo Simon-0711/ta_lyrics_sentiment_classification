@@ -14,6 +14,9 @@ In this project we will use the Github project https://github.com/workmanjack/ly
 #### Utilized libraries
 The utilized libraries can be found in our requirements.txt file in the root of our Github project. In general, the code of our project can be started by simply using the command ``` docker-compose up ```, which installs, builds and starts all necessary services and libraries. Only docker (preferably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your system.
 
+Todo: wait-for-it.sh
+
+
 #### Contributions
 See commit history. 
 

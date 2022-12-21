@@ -1,0 +1,16 @@
+FROM elasticsearch:7.17.7
+
+RUN apt update -y && apt upgrade -y
+RUN apt install python3 -y
+RUN apt-get install python3-pip -y
+
+COPY ./elasticsearch/create_es_index.py /opt/create_es_index.py
+# use this script later to ensure es is running 
+COPY ./elasticsearch/wait-for-it.sh /opt/wait-for-it.sh
+RUN chmod +x /opt/wait-for-it.sh /opt/create_es_index.py
+RUN chown elasticsearch:elasticsearch /opt/wait-for-it.sh /opt/create_es_index.py
+
+COPY ./elasticsearch/requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
+
+#ENTRYPOINT "(/usr/local/bin/docker-entrypoint.sh) & (/opt/wait-for-it.sh -t 50 localhost:9200 -- python3 /opt/create_es_index.py)"

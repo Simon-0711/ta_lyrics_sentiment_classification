@@ -1,7 +1,9 @@
 version: '3'
 services:
   elasticsearch:
-    image: elasticsearch:7.17.7
+    build:
+      context: ./
+      dockerfile: ./elasticsearch/dockerfile
     container_name: "elasticsearch"
     networks:
       - fullstack
