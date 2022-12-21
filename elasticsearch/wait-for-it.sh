@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 ###
 # This script was copied from: https://github.com/vishnubob/wait-for-it/blob/master/wait-for-it.sh
