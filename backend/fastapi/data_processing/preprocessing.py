@@ -1,17 +1,16 @@
 import spacy
 
-def tokenization(text: str) -> list[spacy.tokens.token.Token]:
+def tokenization(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens.token.Token]:
     """Use this function to tokenize text.
 
-    :param text: Text to tokenize
-    :type text: string
+    :param text: Text as list
+    :type text: list[spacy.tokens.token.Token]
     :return: Tokenized text as list
     :rtype: list[spacy.tokens.token.Token]
     """
-    nlp = spacy.load("en_core_web_sm", disable = ['ner'])
 
     token_list = []
-    for doc in list(nlp.pipe([text])): 
+    for doc in text: 
         # iterate over tokens in docs
         for token in doc:
             token_list.append(token)
@@ -85,9 +84,12 @@ def processing_pipeline(song_data: dict) -> dict:
     :return: preprocessed song data
     :rtype: dict
     """
+
+    nlp = spacy.load("en_core_web_sm", disable = ['ner'])
+    text_nlp_pipe = list(nlp.pipe([song_data["Lyrics"]]))
     
     # Tokenization
-    song_data["Lyrics"] = tokenization(song_data["Lyrics"])
+    song_data["Lyrics"] = tokenization(text_nlp_pipe)
     # Stop word removal
     song_data["Lyrics"] = stop_word_removal(song_data["Lyrics"])
     # Punctuation removal
