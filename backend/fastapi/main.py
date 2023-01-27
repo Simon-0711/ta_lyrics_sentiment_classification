@@ -136,8 +136,7 @@ async def search(body: Body):
     song = body.song_name
     artist = body.artist_name
 
-    # song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
-    song_lyrics = None
+    song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
 
     if song_lyrics is None:
         api = genius.Genius(api_token)
@@ -155,21 +154,21 @@ async def search(body: Body):
         # Classify the mood 
         song_dictionary = {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics, "Mood": "none"}
         mood = classify(song_dictionary)
-        song_dictionary["Mood"] = mood
+
         # Send to elastic search
-        # ef.add_es_document(song, artist, lyrics, mood)
-
-        # search similar songs 
-        # get_similar()
-
-        return song_dictionary
-
-
+        # TODO which lyrics to save ? Whole lyrics or the preprocessed ones ?
+        # When preprocessed the else block does not need a preprocessing 
+        ef.add_es_document(song, artist, lyrics.lyrics, mood)
     else:
-        mood = classify(song_lyrics)
-        # search similar songs
-        # get_similar()
-        return {"Song": song, "Artist": artist, "Lyrics": song_lyrics, "Mood": mood}
+        song_dictionary = {"Song": song, "Artist": artist, "Lyrics": song_lyrics, "Mood": "none"}
+        classify(song_dictionary)
+
+
+    # search similar songs
+    # get_similar()
+    # debug log
+    print(f"The song: {song_dictionary['Song']} was labeled: {song_dictionary['Mood']}")
+    return song_dictionary
 
 
 def get_similar():
@@ -183,7 +182,6 @@ def classify(song_dictionary):
     import numpy
 
     # preprocess the song
-    print(song_dictionary)
     preprocessed_lyrics = processing_pipeline(song_dictionary)
 
     #load the tokenizer
@@ -201,5 +199,8 @@ def classify(song_dictionary):
     encoder = preprocessing.LabelEncoder()
     encoder.classes_ = numpy.load(LABELENCODER, allow_pickle=True)
     # transform the prediciton to an actual mood
-    return encoder.inverse_transform(predicted_mood)[0]
+    mood = encoder.inverse_transform(predicted_mood)[0]
+    song_dictionary["Mood"] = mood
+    return mood
+
     
