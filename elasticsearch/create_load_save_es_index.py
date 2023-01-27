@@ -8,7 +8,7 @@ import pandas as pd
 
 
 def create_es_index():
-    # TODO: Add docstring
+    """Create elasticsearch index for our lyrics mood classification using the saved ground truth data in '../data_exploration/data/song-data-labels-cleaned.csv'."""
 
     DATA_FILE_PATH = os.path.abspath(
         os.path.join(
@@ -20,12 +20,13 @@ def create_es_index():
         )
     )
 
-    # check if the file with ground truth labels is found
+    # check for the file with the ground truth mood labels
     if not os.path.isfile(DATA_FILE_PATH):
         raise Exception(
             "'../data_exploration/data/song-data-labels-cleaned.csv' not found"
         )
 
+    # initialize elasticsearch client
     es_host = "http://localhost:9200"
     es = Elasticsearch(hosts=es_host)
 
@@ -81,27 +82,29 @@ def create_es_index():
         os.path.join(DATA_FILE_PATH, "..", f"{index_name}_index.json")
     )
     os.system(
-        f"elasticdump --input={es_host}/{index_name} --output={index_file}"
-    )  # --type=data
-
-
-# TODO: Add function for loading the elasticsearch index from the saved json file
-def load_es_index():
-    # TODO: Add docstring
-
-    index_name = "lyrics_mood_classification"
-    DATA_FILE_PATH = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "data_exploration",
-        "data",
-        f"{index_name}.json",
+        f"elasticdump --input={es_host}/{index_name} --output={index_file} --type=data"
     )
 
-    # check if the file with ground truth labels is found
-    if not os.path.isfile(DATA_FILE_PATH):
+
+def load_es_index():
+    """Load the most current elasticsearch index from the '../data_exploration/data/lyrics_mood_classification.json' file."""
+
+    index_name = "lyrics_mood_classification"
+    INDEX_FILE_PATH = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data_exploration",
+            "data",
+            f"{index_name}_index.json",
+        )
+    )
+
+    # check for the json file
+    if not os.path.isfile(INDEX_FILE_PATH):
         raise Exception(f"'../data_exploration/data/{index_name}.json' not found")
 
+    # initialize elasticsearch client
     es_host = "http://localhost:9200"
     es = Elasticsearch(hosts=es_host)
 
@@ -120,34 +123,38 @@ def load_es_index():
     )
 
     # load last state from index via the json file
-
-    # TODO: check if it works
-    # create documents from json file
-
-    # Open the JSON file
-    with open("file.json", "r") as json_file:
-        # Load the JSON data from the file
-        json_data_dict = json.load(json_file)
-
     new_documents = []
-    for id, document in enumerate(json_data_dict):
-        new_documents.append(
-            {
-                "_index": index_name,
-                "_type": "_doc",
-                "_id": f"{id}",
-                "_source": {
-                    "song_name": document["SName"],
-                    "artist_name": document["Artist"],
-                    "lyrics": document["Lyric"],
-                    "mood": document["Mood"],
-                },
-            }
-        )
+    with open(INDEX_FILE_PATH, "r") as json_file:
+        # load the documents from the json file
+        for line in json_file:
+            document = json.loads(line)
+            new_documents.append(document)
     successful_operations, errors = helpers.bulk(es, new_documents)
     print(f"Successful operations: {successful_operations}")
     print(f"Errors: {errors}")
 
 
+def save_es_index():
+    """Save the most current elasticsearch index at '../data_exploration/data/lyrics_mood_classification.json'."""
+
+    # save elasticsearch index via elasticdump
+    es_host = "http://localhost:9200"
+    index_name = "lyrics_mood_classification"
+    INDEX_FILE_PATH = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data_exploration",
+            "data",
+            f"{index_name}_index.json",
+        )
+    )
+    os.system(
+        f"elasticdump --input={es_host}/{index_name} --output={INDEX_FILE_PATH} --type=data"
+    )
+
+
 if __name__ == "__main__":
-    print(create_es_index())
+    # create_es_index()  # create the elasticsearch index
+    load_es_index()  # load the elasticsearch index
+    # save_es_index()  # save the elasticsearch index
