@@ -112,6 +112,26 @@ async def root():
     return processing_pipeline(test_song)
 
 
+@app.get("/dummy-song-return")
+async def root():
+    test_song_return = {
+        "similar_song_1":
+        {
+            "Song": "Like Toy Soldiers",
+            "Artist": "Eminem",
+            "Mood": "Sad"
+        },
+        "similar_song_2":
+        {
+            "Song": "Ass Like That",
+            "Artist": "Eminem",
+            "Mood": "Sad"
+        }
+    }
+
+    return test_song_return
+
+
 class Body(BaseModel):
     song_name: str
     artist_name: str

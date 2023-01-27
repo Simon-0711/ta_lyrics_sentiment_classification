@@ -17,12 +17,12 @@ export default function Main() {
 
     async function postData(url = '', data = {}) {
         const response = await fetch(url, {
-            method: 'POST',
+            method: 'GET', //POST
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: data
+            //body: data
         })
         return response.json();
     }
@@ -36,10 +36,12 @@ export default function Main() {
             console.log("Sending song and artist to fastapi...")
             console.log(JSON.stringify({ song_name: song_name, artist_name: artist_name }))
             const response = postData(
-                "http://localhost:8000/search",
+                "http://localhost:8000/dummy-song-return", //search
                 JSON.stringify({ song_name: song_name, artist_name: artist_name })
             )
-            console.log(response)
+            response.then(res => {
+                console.log(res)
+            })
             console.log("Request finished...")
         } else {
             // Display error message
