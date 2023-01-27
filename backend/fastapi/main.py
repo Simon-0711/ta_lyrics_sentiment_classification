@@ -153,7 +153,8 @@ async def search(body: Body):
     song = body.song_name
     artist = body.artist_name
 
-    song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
+    #song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
+    song_lyrics = "Not None"
 
     if song_lyrics is None:
         api = genius.Genius(api_token)
@@ -178,6 +179,21 @@ async def search(body: Body):
         # Send to elastic search
         ef.add_es_document(song, artist, lyrics, mood)
 
-        return {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics}
+        #return {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics}
     else:
-        return {"Song": song, "Artist": artist, "Lyrics": song_lyrics}
+        #return {"Song": song, "Artist": artist, "Lyrics": song_lyrics}
+        return {
+            "similar_songs": {
+                "similar_song_1":
+                {
+                    "Song": "Like Toy Soldiers",
+                    "Artist": "Eminem",
+                },
+                "similar_song_2":
+                {
+                    "Song": "Ass Like That",
+                    "Artist": "Eminem",
+                },
+            },
+            "mood": "sad"
+        }
