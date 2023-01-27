@@ -7,7 +7,9 @@ app = FastAPI()
 # Allow only access from react via CORS header
 origins = [
     "http://localhost:3000",
-    "localhost:3000"
+    "localhost:3000",
+    "http://elasticsearch:9200"
+
 ]
 
 

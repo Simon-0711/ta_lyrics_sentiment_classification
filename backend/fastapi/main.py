@@ -6,6 +6,9 @@ from data_processing.preprocessing import processing_pipeline
 from fastapi import FastAPI, HTTPException
 import source.elasticsearch_functions as ef
 
+CNN_MODEL = './cnn_model_v1'
+TOKENIZER = './data_processing/tokenizer.pickle'
+LABELENCODER = './data_processing/label_encoder.npy'
 
 @app.get("/dummy-endpoint")
 async def root():
@@ -148,16 +151,56 @@ async def search(body: Body):
             raise HTTPException(
                 status_code=404, detail="Lyrics for Song not found")
 
-    
-    # TODO: Send to elastic search
-    # TODO: get recommendations
-    
-        # TODO: Get classified mood by CNN
-        mood = "happy"
+        # Classify the mood 
+        song_dictionary = {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics, "Mood": "none"}
+        mood = classify(song_dictionary)
 
         # Send to elastic search
-        ef.add_es_document(song, artist, lyrics, mood)
-
-        return {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics}
+        # TODO which lyrics to save ? Whole lyrics or the preprocessed ones ?
+        # When preprocessed the else block does not need a preprocessing 
+        ef.add_es_document(song, artist, lyrics.lyrics, mood)
     else:
-        return {"Song": song, "Artist": artist, "Lyrics": song_lyrics}
+        song_dictionary = {"Song": song, "Artist": artist, "Lyrics": song_lyrics, "Mood": "none"}
+        classify(song_dictionary)
+
+
+    # search similar songs
+    # get_similar()
+    # debug log
+    print(f"The song: {song_dictionary['Song']} was labeled: {song_dictionary['Mood']}")
+    return song_dictionary
+
+
+def get_similar():
+    return 0
+
+def classify(song_dictionary):
+    import tensorflow as tf
+    import pickle
+    from tensorflow.keras.preprocessing.sequence import pad_sequences
+    from sklearn import preprocessing
+    import numpy
+
+    # preprocess the song
+    preprocessed_lyrics = processing_pipeline(song_dictionary)
+
+    #load the tokenizer
+    with open(TOKENIZER, 'rb') as handle:
+        tokenizer = pickle.load(handle)
+    # tokenize
+    text = tokenizer.texts_to_sequences([preprocessed_lyrics["Lyrics"]])
+    text = pad_sequences(text, 180)
+    # predict the mood
+    model = tf.keras.models.load_model(CNN_MODEL)
+    prediction = model.predict(text)
+    predicted_mood=numpy.argmax(prediction,axis=1)
+
+    # load the label encoder
+    encoder = preprocessing.LabelEncoder()
+    encoder.classes_ = numpy.load(LABELENCODER, allow_pickle=True)
+    # transform the prediciton to an actual mood
+    mood = encoder.inverse_transform(predicted_mood)[0]
+    song_dictionary["Mood"] = mood
+    return mood
+
+    

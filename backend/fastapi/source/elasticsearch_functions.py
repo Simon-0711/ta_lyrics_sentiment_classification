@@ -3,9 +3,6 @@ from elasticsearch import Elasticsearch
 # Set Elasticsearch index name
 index_name = "lyrics_mood_classification"
 
-# Initialize id counter
-id_counter = 0
-
 
 def add_es_document(song_name, artist_name, lyrics, mood):
     """Add document to Elasticsearch index.
@@ -16,25 +13,24 @@ def add_es_document(song_name, artist_name, lyrics, mood):
     :param mood: mood of the document entry.
     """
 
-    global id_counter, index_name
+    global index_name
 
     # TODO: Add authentication for elasticsearch?
-    es_host = "http://localhost:9200"
+    es_host = "http://elasticsearch:9200"
 
     es = Elasticsearch(
         hosts=es_host
     )
-
-    # Add document to index
-    es.create(index=index_name,
-              id=str(id_counter),
-              document={
+    # Add document to index    
+    es.index(index=index_name,
+             document = {
                   "song_name": song_name,
                   "artist_name":  artist_name,
                   "lyrics": lyrics,
                   "mood": mood
-              })
-    id_counter += 1
+              }
+    )
+    es.close()
 
     # TODO: Add return with information if adding document worked or not
 
@@ -52,11 +48,12 @@ def get_stored_mood_of_song(song_name, artist_name):
     global index_name
 
     # TODO: Add authentication for elasticsearch?
-    es_host = "http://localhost:9200"
+    es_host = "http://elasticsearch:9200"
 
     es = Elasticsearch(
         hosts=es_host
     )
+
 
     # Search for song in es index
     # TODO: Change "match" to "term"?
@@ -64,6 +61,7 @@ def get_stored_mood_of_song(song_name, artist_name):
         {"match": {"song_name": song_name}}, {"match": {"artist_name": artist_name}}]}})
 
     # Check if a song has been found
+    es.close()
     if result["hits"]["total"]["value"] > 0:
         # TODO: How to handle multiple songs that have been found?
         return result["hits"]["hits"][0]["_source"]["mood"]
@@ -80,22 +78,21 @@ def get_stored_lyrics_of_song(song_name, artist_name):
     :return: Lyrics of given song and artist name if stored in Elasticsearch index. Else None.
     :rtype: String or None
     """
-
     global index_name
-
     # TODO: Add authentication for elasticsearch?
-    es_host = "http://localhost:9200"
+    es_host = "http://elasticsearch:9200"
 
     es = Elasticsearch(
         hosts=es_host
     )
 
+
     # Search for song in es index
     # TODO: Change "match" to "term"?
     result = es.search(index=index_name, query={"bool": {"must": [
         {"match": {"song_name": song_name}}, {"match": {"artist_name": artist_name}}]}})
-
     # Check if a song has been found
+    es.close()
     if result["hits"]["total"]["value"] > 0:
         # TODO: How to handle multiple songs that have been found?
         return result["hits"]["hits"][0]["_source"]["lyrics"]
