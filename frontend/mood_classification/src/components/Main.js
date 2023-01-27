@@ -45,6 +45,8 @@ export default function Main() {
             response.then(res => {
                 setMood(res.mood)
                 setSimilarSongs(res.similar_songs)
+                console.log(res.mood)
+                console.log(res.similar_songs)
             })
             console.log("Request finished...")
         } else {

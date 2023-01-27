@@ -176,6 +176,28 @@ async def search(body: Body):
         # TODO: Get classified mood by CNN
         mood = "happy"
 
+        # TODO: Search top 3 similar songs based on mood and lyrics and return in the followin structure: 
+        # return {
+        #     "similar_songs": {
+        #         "similar_song_1":
+        #         {
+        #             "Song": "Like Toy Soldiers",
+        #             "Artist": "Eminem",
+        #         },
+        #         "similar_song_2":
+        #         {
+        #             "Song": "Ass Like That",
+        #             "Artist": "Eminem",
+        #         },
+        #         "similar_song_3":
+        #         {
+        #             "Song": "More Ass Like That",
+        #             "Artist": "Eminem",
+        #         },
+        #     },
+        #     "mood": "sad"
+        # }
+
         # Send to elastic search
         ef.add_es_document(song, artist, lyrics, mood)
 
@@ -192,6 +214,11 @@ async def search(body: Body):
                 "similar_song_2":
                 {
                     "Song": "Ass Like That",
+                    "Artist": "Eminem",
+                },
+                "similar_song_3":
+                {
+                    "Song": "More Ass Like That",
                     "Artist": "Eminem",
                 },
             },
