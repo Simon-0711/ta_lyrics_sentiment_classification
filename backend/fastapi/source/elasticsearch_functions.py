@@ -18,17 +18,16 @@ def add_es_document(song_name, artist_name, lyrics, mood):
     # TODO: Add authentication for elasticsearch?
     es_host = "http://elasticsearch:9200"
 
-    es = Elasticsearch(
-        hosts=es_host
-    )
-    # Add document to index    
-    es.index(index=index_name,
-             document = {
-                  "song_name": song_name,
-                  "artist_name":  artist_name,
-                  "lyrics": lyrics,
-                  "mood": mood
-              }
+    es = Elasticsearch(hosts=es_host)
+    # Add document to index
+    es.index(
+        index=index_name,
+        document={
+            "song_name": song_name,
+            "artist_name": artist_name,
+            "lyrics": lyrics,
+            "mood": mood,
+        },
     )
     es.close()
 
@@ -50,15 +49,21 @@ def get_stored_mood_of_song(song_name, artist_name):
     # TODO: Add authentication for elasticsearch?
     es_host = "http://elasticsearch:9200"
 
-    es = Elasticsearch(
-        hosts=es_host
-    )
-
+    es = Elasticsearch(hosts=es_host)
 
     # Search for song in es index
     # TODO: Change "match" to "term"?
-    result = es.search(index=index_name, query={"bool": {"must": [
-        {"match": {"song_name": song_name}}, {"match": {"artist_name": artist_name}}]}})
+    result = es.search(
+        index=index_name,
+        query={
+            "bool": {
+                "must": [
+                    {"match": {"song_name": song_name}},
+                    {"match": {"artist_name": artist_name}},
+                ]
+            }
+        },
+    )
 
     # Check if a song has been found
     es.close()
@@ -82,15 +87,21 @@ def get_stored_lyrics_of_song(song_name, artist_name):
     # TODO: Add authentication for elasticsearch?
     es_host = "http://elasticsearch:9200"
 
-    es = Elasticsearch(
-        hosts=es_host
-    )
-
+    es = Elasticsearch(hosts=es_host)
 
     # Search for song in es index
     # TODO: Change "match" to "term"?
-    result = es.search(index=index_name, query={"bool": {"must": [
-        {"match": {"song_name": song_name}}, {"match": {"artist_name": artist_name}}]}})
+    result = es.search(
+        index=index_name,
+        query={
+            "bool": {
+                "must": [
+                    {"match": {"song_name": song_name}},
+                    {"match": {"artist_name": artist_name}},
+                ]
+            }
+        },
+    )
     # Check if a song has been found
     es.close()
     if result["hits"]["total"]["value"] > 0:
@@ -98,3 +109,38 @@ def get_stored_lyrics_of_song(song_name, artist_name):
         return result["hits"]["hits"][0]["_source"]["lyrics"]
     else:
         return None
+
+
+def get_all_documents_of_mood(mood):
+    """
+    Function that returns all the lyrics of a certain mood.
+
+    :param mood: mood of the document entry.
+
+    :return: list of lyrics with given mood.
+    :rtype: List of strings
+    """
+
+    global index_name
+    es_host = "http://elasticsearch:9200"
+
+    es = Elasticsearch(hosts=es_host)
+
+    # Search for all song with specific mood in es index
+    results = es.search(index=index_name, query={"match": {"mood": mood}})
+    es.close()
+
+    # Check if given mood has songs in the index
+    if results["hits"]["total"]["value"] == 0:
+        raise Exception(f"No songs found for mood: {mood}.")
+
+    # Save all lyrics of the songs with the given mood
+    song_same_mood_dict = {}
+    for result in results["hits"]["hits"]:
+        song = result["_source"]["song_name"]
+        artist = result["_source"]["artist_name"]
+        lyrics = result["_source"]["lyrics"]
+        document_dict = {"Song": song, "Artist": artist, "Lyrics": lyrics}
+
+        song_same_mood_dict[f"{song}_{artist}"] = document_dict
+    return song_same_mood_dict
