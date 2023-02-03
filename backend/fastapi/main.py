@@ -182,7 +182,7 @@ async def search(body: Body):
         ef.add_es_document(song, artist, lyrics.lyrics, mood)
     else:
         song_dictionary = {"Song": song, "Artist": artist, "Lyrics": song_lyrics, "Mood": "none"}
-        classify(song_dictionary)
+        #classify(song_dictionary)
 
     # search similar songs
     # get_similar()
@@ -209,7 +209,7 @@ async def search(body: Body):
         },
         "mood": "sad"
     }
-
+ 
 
 def get_similar():
     return 0
