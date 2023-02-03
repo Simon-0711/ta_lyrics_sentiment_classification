@@ -133,12 +133,13 @@ async def search(body: Body):
     with open('secrets/genius_api_secret', 'r') as file:
         api_token = file.read()
 
-    song = body.song_name
-    artist = body.artist_name
+    song = body.song_name.lower()
+    artist = body.artist_name.lower()
 
     song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
 
     if song_lyrics is None:
+        print("The song was not found ... fetching")
         api = genius.Genius(api_token)
         try:
             lyrics = api.search_song(song, artist)
@@ -152,6 +153,13 @@ async def search(body: Body):
                 status_code=404, detail="Lyrics for Song not found")
 
         # Classify the mood 
+        print(lyrics.artist.lower())
+        print("#####################################")
+        print(lyrics.title.lower())
+        # set the artist and song name to the found one, 
+        # since genius package can search on only a substring and this would lead to errors in the end
+        song = lyrics.title.lower()
+        artist = lyrics.artist.lower()
         song_dictionary = {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics, "Mood": "none"}
         mood = classify(song_dictionary)
 
@@ -160,9 +168,9 @@ async def search(body: Body):
         # When preprocessed the else block does not need a preprocessing 
         ef.add_es_document(song, artist, lyrics.lyrics, mood)
     else:
-        song_dictionary = {"Song": song, "Artist": artist, "Lyrics": song_lyrics, "Mood": "none"}
-        classify(song_dictionary)
-
+        print("The song was found")
+        mood = ef.get_stored_mood_of_song(song, artist)
+        song_dictionary = {"Song": song, "Artist": artist, "Lyrics": song_lyrics, "Mood": mood}
 
     # search similar songs
     # get_similar()
