@@ -1,5 +1,14 @@
 import re
 def chorus_normalization(original_lyrics):
+    """
+    Function to get rid of unnecessary tokens in the lyrics which don't
+    add any value to he predections. 
+
+    input: 
+    original_lyrics: string
+    output: 
+    lyrics: string 
+    """
     lyrics = original_lyrics
     # filter everything in [..]
     lyrics = re.sub("\[[^]]*\]", "", lyrics)
