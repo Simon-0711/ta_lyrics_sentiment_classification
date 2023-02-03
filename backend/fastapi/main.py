@@ -32,7 +32,8 @@ async def search(body: Body):
     song = body.song_name.lower()
     artist = body.artist_name.lower()
 
-    song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
+    #song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
+    song_lyrics = "Not None"
 
     if song_lyrics is None:
         print("The song was not found ... fetching")
@@ -60,7 +61,7 @@ async def search(body: Body):
         song_dictionary = {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics, "Mood": "none"}
         mood = classify(song_dictionary)
 
-        # Send to elastic search
+        # TODO: Search top 3 similar songs based on mood and lyrics and return in the followin structure: 
         # TODO which lyrics to save ? Whole lyrics or the preprocessed ones ?
         # When preprocessed the else block does not need a preprocessing 
         ef.add_es_document(song, artist, lyrics.lyrics, mood)
@@ -73,7 +74,27 @@ async def search(body: Body):
     # get_similar()
     # debug log
     print(f"The song: {song_dictionary['Song']} was labeled: {song_dictionary['Mood']}")
-    return song_dictionary
+    # TODO: Replace fixed dict with variable song_dictionary
+    return {
+        "similar_songs": {
+            "similar_song_1":
+            {
+                "Song": "Like Toy Soldiers",
+                "Artist": "Eminem",
+            },
+            "similar_song_2":
+            {
+                "Song": "Ass Like That",
+                "Artist": "Eminem",
+            },
+            "similar_song_3":
+            {
+                "Song": "More Ass Like That",
+                "Artist": "Eminem",
+            },
+        },
+        "mood": "sad"
+    }
 
 
 def get_similar():
