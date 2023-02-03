@@ -2,10 +2,13 @@ import React, { useState } from 'react'
 
 export default function Main() {
     // Variables for song and artist name
-    const [song_name, set_song_name] = useState(null)
-    const [artist_name, set_artist_name] = useState(null)
+    const [song_name, set_song_name] = useState(null);
+    const [artist_name, set_artist_name] = useState(null);
     // Saves if user input was correct
     const [wrongInputIsShown, setWrongInputIsShown] = useState(false);
+    // Saves mood and the similar songs for the given song
+    const [mood, setMood] = useState(null);
+    const [similar_songs, setSimilarSongs] = useState(null);
 
     // Functions to get song and artist name
     function getSongName(input_box_input) {
@@ -39,11 +42,18 @@ export default function Main() {
                 "http://localhost:8000/search",
                 JSON.stringify({ song_name: song_name, artist_name: artist_name })
             )
-            console.log(response)
+            response.then(res => {
+                setMood(res.mood)
+                setSimilarSongs(res.similar_songs)
+                console.log(res.mood)
+                console.log(res.similar_songs)
+            })
             console.log("Request finished...")
         } else {
             // Display error message
             setWrongInputIsShown(true)
+            setMood(null)
+            setSimilarSongs(null)
         }
     }
 
