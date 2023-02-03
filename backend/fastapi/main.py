@@ -220,27 +220,27 @@ def get_tf_idf_vectorized_lyrics(song_to_compare, mood):
     """
     Function that returns the tf-idf vectors for given lyrics.
 
-    :param lyrics: lyrics of the searched song.
-    :param mood: mood of the searched song.
+    :param song_to_compare: dict with song name, artist name and lyrics for song to compare with.
+    :param mood: mood of the song to compare with. # TODO: Add mood to first input parameter?
 
-    :return: tf-idf vector for given lyric.
-    :rtype: 1d numpy array
-    :return: array with tf-idf vectors for each lyric of given mood (except of given lyric).
-    :rtype: 2d numpy array
+    :return: dict for the song we want to compare each lyrics of certain mood with. It contains information on the song name, artist name, lyrics and vectorized lyric.
+    :rtype: dict
+    :return: dict with dicts that contain song name, artist name, lyrics and vectorized lyrics for each song of given mood (except of the song to compare with).
+    :rtype: dict
     """
 
     # get documents with songs that have the same mood
     song_same_mood_dict = ef.get_all_documents_of_mood(mood)
 
-    # check if song to compare is within the song_same_mood_dict. If not add it for tf-idf vecotrization
+    # check if song to compare with is within the song_same_mood_dict. If not add it for tf-idf vectorization
     song_to_compare_key = f'{song_to_compare["Song"]}_{song_to_compare["Artist"]}'
     if song_to_compare_key not in song_same_mood_dict.keys():
         song_same_mood_dict[song_to_compare_key] = song_to_compare
 
-    # search for lyrics in mood_lyrics
+    # get list of all lyrics of songs with same mood
     lyrics_list = [document["Lyrics"] for document in song_same_mood_dict.values()]
 
-    # Initialize TfidfVectorizer
+    # initialize TfidfVectorizer # TODO: Maybe add more parameters or adjust current ones
     tfidf_vectorizer = TfidfVectorizer(
         analyzer="word", lowercase=True, stop_words="english", min_df=5
     )
@@ -257,7 +257,7 @@ def get_tf_idf_vectorized_lyrics(song_to_compare, mood):
 
     for key, vectorized_lyric in zip(
         list(song_same_mood_dict.keys()), vectorized_lyrics
-    ):
+    ):  # TODO: check if I am adding the rows instead of the columns of vectorized_lyrics
         song_same_mood_dict[key]["Vectorized_lyric"] = vectorized_lyric
 
     song_to_compare = song_same_mood_dict.pop(song_to_compare_key)

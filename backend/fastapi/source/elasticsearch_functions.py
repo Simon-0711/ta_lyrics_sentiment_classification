@@ -113,28 +113,28 @@ def get_stored_lyrics_of_song(song_name, artist_name):
 
 def get_all_documents_of_mood(mood):
     """
-    Function that returns all the lyrics of a certain mood.
+    Function that returns all the documents of a certain mood.
 
     :param mood: mood of the document entry.
 
-    :return: list of lyrics with given mood.
-    :rtype: List of strings
+    :return: dict of documents of the given mood.
+    :rtype: dict
     """
 
     global index_name
-    es_host = "http://elasticsearch:9200"
 
+    es_host = "http://elasticsearch:9200"
     es = Elasticsearch(hosts=es_host)
 
-    # Search for all song with specific mood in es index
+    # search for all document of given mood
     results = es.search(index=index_name, query={"match": {"mood": mood}})
     es.close()
 
-    # Check if given mood has songs in the index
+    # check if given mood has songs in the index
     if results["hits"]["total"]["value"] == 0:
         raise Exception(f"No songs found for mood: {mood}.")
 
-    # Save all lyrics of the songs with the given mood
+    # save all lyrics of the songs with the given mood
     song_same_mood_dict = {}
     for result in results["hits"]["hits"]:
         song = result["_source"]["song_name"]
@@ -142,5 +142,7 @@ def get_all_documents_of_mood(mood):
         lyrics = result["_source"]["lyrics"]
         document_dict = {"Song": song, "Artist": artist, "Lyrics": lyrics}
 
+        # add document to song_same_mood_dict
         song_same_mood_dict[f"{song}_{artist}"] = document_dict
+
     return song_same_mood_dict
