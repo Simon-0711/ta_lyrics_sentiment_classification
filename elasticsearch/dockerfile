@@ -4,7 +4,8 @@ RUN apt update -y && apt upgrade -y
 RUN apt install python3 -y
 RUN apt-get install python3-pip -y
 
-COPY ./elasticsearch/create_load_save_es_index.py /tmp/create_load_save_es_index.py
+# Copy python scripts and dump if exists
+COPY ./elasticsearch/create_load_save_es_index.py ./elasticsearch/dump.json* /tmp/
 COPY ./elasticsearch/startup.sh /tmp/startup.sh
 
 # get components for elasticdump
@@ -12,7 +13,6 @@ COPY ./elasticsearch/startup.sh /tmp/startup.sh
 RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt update && apt install -y nodejs
 RUN npm install elasticdump --global --save
-
 
 # use this script later to ensure elastic search is running 
 COPY ./elasticsearch/wait-for-it.sh /tmp/wait-for-it.sh
