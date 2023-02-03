@@ -173,7 +173,7 @@ def save_es_index():
 if __name__ == "__main__":
     from os.path import exists
     # check if dump exists
-    if exists("/tmp/dump.json"):
-        load_es_index("/tmp/dump.json")
+    if exists("/opt/dump.json"):
+        load_es_index("/opt/dump.json")
     else:
         create_es_index_plain()  # create the elasticsearch index plain without data

@@ -5,7 +5,6 @@ RUN apt install python3 -y
 RUN apt-get install python3-pip -y
 
 # Copy python scripts and dump if exists
-COPY ./elasticsearch/create_load_save_es_index.py ./elasticsearch/dump.json* /tmp/
 COPY ./elasticsearch/startup.sh /tmp/startup.sh
 
 # get components for elasticdump
@@ -15,9 +14,8 @@ RUN apt update && apt install -y nodejs
 RUN npm install elasticdump --global --save
 
 # use this script later to ensure elastic search is running 
-COPY ./elasticsearch/wait-for-it.sh /tmp/wait-for-it.sh
-RUN chmod 777 /tmp/wait-for-it.sh /tmp/create_load_save_es_index.py /tmp/startup.sh
-RUN chown elasticsearch:elasticsearch /tmp/wait-for-it.sh /tmp/create_load_save_es_index.py /tmp/startup.sh
+RUN chmod 777 /tmp/startup.sh
+RUN chown elasticsearch:elasticsearch /tmp/startup.sh
 
 COPY ./elasticsearch/requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
