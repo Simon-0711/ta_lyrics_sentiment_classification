@@ -4,11 +4,15 @@ from pydantic import BaseModel
 import lyricsgenius as genius  # https://github.com/johnwmillr/LyricsGenius
 from data_processing.preprocessing import processing_pipeline
 from fastapi import FastAPI, HTTPException
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import TruncatedSVD
+
 import source.elasticsearch_functions as ef
 
-CNN_MODEL = './cnn_model_v1'
-TOKENIZER = './data_processing/tokenizer.pickle'
-LABELENCODER = './data_processing/label_encoder.npy'
+CNN_MODEL = "./cnn_model_v1"
+TOKENIZER = "./data_processing/tokenizer.pickle"
+LABELENCODER = "./data_processing/label_encoder.npy"
+
 
 @app.get("/dummy-endpoint")
 async def root():
@@ -118,18 +122,12 @@ async def root():
 @app.get("/dummy-song-return")
 async def root():
     test_song_return = {
-        "similar_song_1":
-        {
+        "similar_song_1": {
             "Song": "Like Toy Soldiers",
             "Artist": "Eminem",
-            "Mood": "Sad"
+            "Mood": "Sad",
         },
-        "similar_song_2":
-        {
-            "Song": "Ass Like That",
-            "Artist": "Eminem",
-            "Mood": "Sad"
-        }
+        "similar_song_2": {"Song": "Ass Like That", "Artist": "Eminem", "Mood": "Sad"},
     }
 
     return test_song_return
@@ -143,20 +141,20 @@ class Body(BaseModel):
 @app.post("/search")
 async def search(body: Body):
     """
-        Function that gets song and artist name from frontend in JSON as such:
-        {
-            song_name: "songname",
-            artist_name: "artist"
-        }
+    Function that gets song and artist name from frontend in JSON as such:
+    {
+        song_name: "songname",
+        artist_name: "artist"
+    }
     """
     # read in the api key after it has been encrypted by you
-    with open('secrets/genius_api_secret', 'r') as file:
+    with open("secrets/genius_api_secret", "r") as file:
         api_token = file.read()
 
     song = body.song_name
     artist = body.artist_name
 
-    #song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
+    # song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
     song_lyrics = "Not None"
 
     if song_lyrics is None:
@@ -165,23 +163,33 @@ async def search(body: Body):
             lyrics = api.search_song(song, artist)
         except:
             raise HTTPException(
-                status_code=500, detail="Error during scraping of the lyrics")
+                status_code=500, detail="Error during scraping of the lyrics"
+            )
 
         # return 404 if song not found
         if lyrics is None:
-            raise HTTPException(
-                status_code=404, detail="Lyrics for Song not found")
+            raise HTTPException(status_code=404, detail="Lyrics for Song not found")
 
-        # Classify the mood 
-        song_dictionary = {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics, "Mood": "none"}
+        # Classify the mood
+        song_dictionary = {
+            "Song": song,
+            "Artist": artist,
+            "Lyrics": lyrics.lyrics,
+            "Mood": "none",
+        }
         mood = classify(song_dictionary)
 
-        # TODO: Search top 3 similar songs based on mood and lyrics and return in the followin structure: 
+        # TODO: Search top 3 similar songs based on mood and lyrics and return in the followin structure:
         # TODO which lyrics to save ? Whole lyrics or the preprocessed ones ?
-        # When preprocessed the else block does not need a preprocessing 
+        # When preprocessed the else block does not need a preprocessing
         ef.add_es_document(song, artist, lyrics.lyrics, mood)
     else:
-        song_dictionary = {"Song": song, "Artist": artist, "Lyrics": song_lyrics, "Mood": "none"}
+        song_dictionary = {
+            "Song": song,
+            "Artist": artist,
+            "Lyrics": song_lyrics,
+            "Mood": "none",
+        }
         classify(song_dictionary)
 
     # search similar songs
@@ -191,28 +199,75 @@ async def search(body: Body):
     # TODO: Replace fixed dict with variable song_dictionary
     return {
         "similar_songs": {
-            "similar_song_1":
-            {
+            "similar_song_1": {
                 "Song": "Like Toy Soldiers",
                 "Artist": "Eminem",
             },
-            "similar_song_2":
-            {
+            "similar_song_2": {
                 "Song": "Ass Like That",
                 "Artist": "Eminem",
             },
-            "similar_song_3":
-            {
+            "similar_song_3": {
                 "Song": "More Ass Like That",
                 "Artist": "Eminem",
             },
         },
-        "mood": "sad"
+        "mood": "sad",
     }
+
+
+def get_tf_idf_vectorized_lyrics(song_to_compare, mood):
+    """
+    Function that returns the tf-idf vectors for given lyrics.
+
+    :param lyrics: lyrics of the searched song.
+    :param mood: mood of the searched song.
+
+    :return: tf-idf vector for given lyric.
+    :rtype: 1d numpy array
+    :return: array with tf-idf vectors for each lyric of given mood (except of given lyric).
+    :rtype: 2d numpy array
+    """
+
+    # get documents with songs that have the same mood
+    song_same_mood_dict = ef.get_all_documents_of_mood(mood)
+
+    # check if song to compare is within the song_same_mood_dict. If not add it for tf-idf vecotrization
+    song_to_compare_key = f'{song_to_compare["Song"]}_{song_to_compare["Artist"]}'
+    if song_to_compare_key not in song_same_mood_dict.keys():
+        song_same_mood_dict[song_to_compare_key] = song_to_compare
+
+    # search for lyrics in mood_lyrics
+    lyrics_list = [document["Lyrics"] for document in song_same_mood_dict.values()]
+
+    # Initialize TfidfVectorizer
+    tfidf_vectorizer = TfidfVectorizer(
+        analyzer="word", lowercase=True, stop_words="english", min_df=5
+    )
+    # generate tdf-idf scores
+    lyrics_tf_idf = tfidf_vectorizer.fit_transform(lyrics_list)
+
+    # reduce the dimensionality of the tf-idf vectors
+    SVD = TruncatedSVD(
+        n_components=300, random_state=42  # number of output dimensionalities
+    )
+    vectorized_lyrics = SVD.fit_transform(
+        lyrics_tf_idf
+    )  # TODO: check the dimension. Should be (#documents, 300)
+
+    for key, vectorized_lyric in zip(
+        list(song_same_mood_dict.keys()), vectorized_lyrics
+    ):
+        song_same_mood_dict[key]["Vectorized_lyric"] = vectorized_lyric
+
+    song_to_compare = song_same_mood_dict.pop(song_to_compare_key)
+
+    return song_to_compare, song_same_mood_dict
 
 
 def get_similar():
     return 0
+
 
 def classify(song_dictionary):
     import tensorflow as tf
@@ -224,8 +279,8 @@ def classify(song_dictionary):
     # preprocess the song
     preprocessed_lyrics = processing_pipeline(song_dictionary)
 
-    #load the tokenizer
-    with open(TOKENIZER, 'rb') as handle:
+    # load the tokenizer
+    with open(TOKENIZER, "rb") as handle:
         tokenizer = pickle.load(handle)
     # tokenize
     text = tokenizer.texts_to_sequences([preprocessed_lyrics["Lyrics"]])
@@ -233,7 +288,7 @@ def classify(song_dictionary):
     # predict the mood
     model = tf.keras.models.load_model(CNN_MODEL)
     prediction = model.predict(text)
-    predicted_mood=numpy.argmax(prediction,axis=1)
+    predicted_mood = numpy.argmax(prediction, axis=1)
 
     # load the label encoder
     encoder = preprocessing.LabelEncoder()
@@ -242,5 +297,3 @@ def classify(song_dictionary):
     mood = encoder.inverse_transform(predicted_mood)[0]
     song_dictionary["Mood"] = mood
     return mood
-
-    
