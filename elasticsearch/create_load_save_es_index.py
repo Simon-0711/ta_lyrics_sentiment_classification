@@ -32,6 +32,8 @@ def create_es_index_plain():
     )
 
 def create_es_index():
+    # Todo: discuss if this moethod is jst doubling the one below (load) 
+    # since the dump is most likely equal or almost equal to our initial dataset
     """Create elasticsearch index for our lyrics mood classification using the saved ground truth data in '../data_exploration/data/song-data-labels-cleaned.csv'."""
 
     DATA_FILE_PATH = os.path.abspath(
