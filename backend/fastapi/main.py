@@ -105,7 +105,7 @@ async def search(body: Body) -> dict:
     similar_songs = get_similar(song_to_compare=song_dictionary, mood=mood)
     test_print_console(str(similar_songs))
 
-    return similar_songs(song_to_compare=song_dictionary, mood=mood)
+    return similar_songs
 
 
 def sklearn_cosine(x: np.array, y: np.array) -> int:
@@ -157,7 +157,8 @@ def get_top_n_similar(
             similarity_score = 0
         # Add score to list of all scores
         cosine_similarity_scores.append(similarity_score)
-        value["Similarity"] = similarity_score
+        # round similarity to decent percentage
+        value["Similarity"] = round(similarity_score*100,2)
     cosine_similarity_scores = np.array(cosine_similarity_scores)
 
     # get indexes of top n values

@@ -70,7 +70,7 @@ export default function Main() {
             {mood != null && similar_songs != null && !wrongInputIsShown && <p id="output_songs">Similar songs with a {mood} mood: </p>}
             {mood != null && similar_songs != null && !wrongInputIsShown && <p id="output">{Object.keys(similar_songs).map((key) => {
                 return (
-                    <p>Song: {similar_songs[key].Song}, Artist: {similar_songs[key].Artist}</p>
+                    <p>Song: {similar_songs[key].Song}, Artist: {similar_songs[key].Artist}, Similarity: {similar_songs[key].Similarity} %</p>
                 );
             })}</p>}
         </div >
