@@ -197,7 +197,7 @@ async def search(body: Body):
     # get_similar()
     # debug log
     print(f"The song: {song_dictionary['Song']} was labeled: {song_dictionary['Mood']}")
-    # TODO: Replace fixed dict with variable song_dictionary
+    # TODO: Replace fixed dict with return from get_similar()
     return {
         "similar_songs": {
             "similar_song_1": {
@@ -322,6 +322,7 @@ def get_tf_idf_vectorized_lyrics(song_to_compare: dict, mood: str) -> tuple[dict
     return song_to_compare, song_same_mood_dict
 
 
+# TODO: Test if function gets correct values from elastic search
 def get_similar(song_to_compare: dict, mood: str) -> dict:
     """This function gets top n similar song names and artist names based on passed 
     song_to_compare and mood. 
