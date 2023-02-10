@@ -64,10 +64,9 @@ async def search(body: Body):
         artist = lyrics.artist.lower()
         lyrics.lyrics = utils.chorus_normalization(lyrics.lyrics.lower())
         song_dictionary = {"Song": song, "Artist": artist, "Lyrics": lyrics.lyrics, "Mood": "none"}
+        # Mood is set in classify function (call by reference is used)
         mood = classify(song_dictionary)
-
-        # TODO: Search top 3 similar songs based on mood and lyrics and return in the followin structure:
-        # TODO which lyrics to save ? Whole lyrics or the preprocessed ones ?
+        
         # When preprocessed the else block does not need a preprocessing
         ef.add_es_document(song, artist, lyrics.lyrics, mood)
     else:
@@ -76,10 +75,13 @@ async def search(body: Body):
         song_dictionary = {"Song": song, "Artist": artist, "Lyrics": song_lyrics.lower(), "Mood": mood}
 
     # search similar songs
-    # get_similar()
+    mood = song_dictionary["Mood"]
+    song_to_compare = song_dictionary.pop('Mood', None)
     # debug log
     print(f"The song: {song_dictionary['Song']} was labeled: {song_dictionary['Mood']}")
-    # TODO: Replace fixed dict with variable song_dictionary
+    
+    return get_similar(song_to_compare=song_to_compare, mood=mood)
+
     return {
         "similar_songs": {
             "similar_song_1": {
