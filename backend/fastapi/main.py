@@ -21,33 +21,50 @@ TOKENIZER = "./data_processing/tokenizer.pickle"
 LABELENCODER = "./data_processing/label_encoder.npy"
 
 
+# TODO remove
+def test_print_console(string: str):
+    print("#" *80)
+    print("#" *80)
+    print("")
+    print(string)
+    print("")
+    print("#" *80)
+    print("#" *80)
+
+
 class Body(BaseModel):
     song_name: str
     artist_name: str
 
 
 @app.post("/search")
-async def search(body: Body):
-    """
-    Function that gets song and artist name from frontend in JSON as such:
+async def search(body: Body) -> dict:
+    """Function that gets song and artist name from frontend in JSON as such:
     {
         song_name: "songname",
         artist_name: "artist"
     }
+    It returns the top 3 most similar songs for the given song and mood.
+
+    :param body: songname and aritst
+    :type body: Body
+    :raises HTTPException: Error when scraping the lyrics
+    :raises HTTPException: Error lyrics for song not found
+    :return: dictionary of top three most similar songs
+    :rtype: dict
     """
 
     # read in the api key after it has been encrypted by you
     with open("secrets/genius_api_secret", "r") as file:
         api_token = file.read()
-    
+
     song = body.song_name.lower()
     artist = body.artist_name.lower()
 
-    # song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
-    song_lyrics = "Not None"
+    song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
 
     if song_lyrics is None:
-        print("The song was not found ... fetching")
+        test_print_console("The song was not found ... fetching")
         api = genius.Genius(api_token)
         try:
             lyrics = api.search_song(song, artist)
@@ -60,10 +77,8 @@ async def search(body: Body):
         if lyrics is None:
             raise HTTPException(status_code=404, detail="Lyrics for Song not found")
 
+        test_print_console(f"Artist: {lyrics.artist.lower()} - Lyrics: {lyrics.title.lower()}")
         # Classify the mood 
-        print(lyrics.artist.lower())
-        print("#####################################")
-        print(lyrics.title.lower())
         # set the artist and song name to the found one, 
         # since genius package can search on only a substring and this would lead to errors in the end
         song = lyrics.title.lower()
@@ -82,11 +97,15 @@ async def search(body: Body):
 
     # search similar songs
     mood = song_dictionary["Mood"]
-    song_to_compare = song_dictionary.pop('Mood', None)
+    song_dictionary.pop('Mood', None)
     # debug log
-    print(f"The song: {song_dictionary['Song']} was labeled: {mood}")
-    
-    return get_similar(song_to_compare=song_to_compare, mood=mood)
+    test_print_console(f"The song: {song_dictionary['Song']} was labeled: {mood}")
+
+    # get top n similar songs
+    similar_songs = get_similar(song_to_compare=song_dictionary, mood=mood)
+    test_print_console(str(similar_songs))
+
+    return similar_songs(song_to_compare=song_dictionary, mood=mood)
 
     return {
         "similar_songs": {
