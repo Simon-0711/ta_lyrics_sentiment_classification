@@ -101,7 +101,7 @@ async def search(body: Body) -> dict:
     # debug log
     test_print_console(f"The song: {song_dictionary['Song']} was labeled: {mood}")
 
-    get top n similar songs
+    # get top n similar songs
     similar_songs = get_similar(song_to_compare=song_dictionary, mood=mood)
     test_print_console(str(similar_songs))
 
