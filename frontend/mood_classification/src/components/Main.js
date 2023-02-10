@@ -70,15 +70,15 @@ export default function Main() {
             <button id='searchSimilarLyricsButton' name="searchLyrics" onClick={() => sendToFastApi(song_name, artist_name)}>Find Similar Songs</button>
             {wrongInputIsShown && <p id="errorMissingInput">Please fill out both song and artist name</p>}
             <div id='recommendationsDiv'>
-                { similar_songs && Object.keys(similar_songs) && Object.keys(similar_songs).map((key, index) => {
-                        return(
-                            <p>{key}: {similar_songs[key]}</p>
-                        );
+                {similar_songs && Object.keys(similar_songs) && Object.keys(similar_songs).map((key, index) => {
+                    return (
+                        <p>{key}: {similar_songs[key]}</p>
+                    );
                 })}
-                { similar_songs && Object.keys(similar_songs) && Object.values(similar_songs).map((value, index) => {
-                        return(
-                            <p>key = {index}  {value}</p>  
-                        );
+                {similar_songs && Object.keys(similar_songs) && Object.values(similar_songs).map((value, index) => {
+                    return (
+                        <p>key = {index}  {value}</p>
+                    );
                 })}
             </div>
         </div >
