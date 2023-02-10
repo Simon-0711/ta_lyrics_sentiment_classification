@@ -4,13 +4,18 @@ RUN apt update -y && apt upgrade -y
 RUN apt install python3 -y
 RUN apt-get install python3-pip -y
 
-COPY ./elasticsearch/create_load_save_es_index.py /tmp/create_load_save_es_index.py
+# Copy python scripts and dump if exists
 COPY ./elasticsearch/startup.sh /tmp/startup.sh
 
-# use this script later to ensure es is running 
-COPY ./elasticsearch/wait-for-it.sh /tmp/wait-for-it.sh
-RUN chmod 777 /tmp/wait-for-it.sh /tmp/create_load_save_es_index.py /tmp/startup.sh
-RUN chown elasticsearch:elasticsearch /tmp/wait-for-it.sh /tmp/create_load_save_es_index.py /tmp/startup.sh
+# get components for elasticdump
+# update repo because otherwise installation of node/npm requires numerical input which I cannot automate
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt update && apt install -y nodejs
+RUN npm install elasticdump --global --save
+
+# use this script later to ensure elastic search is running 
+RUN chmod 777 /tmp/startup.sh
+RUN chown elasticsearch:elasticsearch /tmp/startup.sh
 
 COPY ./elasticsearch/requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt

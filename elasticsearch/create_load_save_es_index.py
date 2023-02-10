@@ -7,7 +7,33 @@ from elasticsearch import helpers
 import pandas as pd
 
 
+def create_es_index_plain():
+    """
+        create index only and dont load any additional data
+    """
+
+   # initialize elasticsearch client
+    es_host = "http://localhost:9200"
+    es = Elasticsearch(hosts=es_host)
+
+    # create empty index
+    index_name = "lyrics_mood_classification"
+    es.indices.create(
+        index=index_name,
+        mappings={
+            "dynamic": "strict",
+            "properties": {
+                "song_name": {"type": "text"},
+                "artist_name": {"type": "text"},
+                "lyrics": {"type": "text"},
+                "mood": {"type": "text"},
+            },
+        },
+    )
+
 def create_es_index():
+    # Todo: discuss if this moethod is jst doubling the one below (load) 
+    # since the dump is most likely equal or almost equal to our initial dataset
     """Create elasticsearch index for our lyrics mood classification using the saved ground truth data in '../data_exploration/data/song-data-labels-cleaned.csv'."""
 
     DATA_FILE_PATH = os.path.abspath(
@@ -86,23 +112,15 @@ def create_es_index():
     )
 
 
-def load_es_index():
+def load_es_index(path):
     """Load the most current elasticsearch index from the '../data_exploration/data/lyrics_mood_classification.json' file."""
 
     index_name = "lyrics_mood_classification"
-    INDEX_FILE_PATH = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "data_exploration",
-            "data",
-            f"{index_name}_index.json",
-        )
-    )
+    INDEX_FILE_PATH = path
 
     # check for the json file
     if not os.path.isfile(INDEX_FILE_PATH):
-        raise Exception(f"'../data_exploration/data/{index_name}.json' not found")
+        raise Exception(f"{INDEX_FILE_PATH}.json not found")
 
     # initialize elasticsearch client
     es_host = "http://localhost:9200"
@@ -155,6 +173,9 @@ def save_es_index():
 
 
 if __name__ == "__main__":
-    # create_es_index()  # create the elasticsearch index
-    load_es_index()  # load the elasticsearch index
-    # save_es_index()  # save the elasticsearch index
+    from os.path import exists
+    # check if dump exists
+    if exists("/opt/dump.json"):
+        load_es_index("/opt/dump.json")
+    else:
+        create_es_index_plain()  # create the elasticsearch index plain without data

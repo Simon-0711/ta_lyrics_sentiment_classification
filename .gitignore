@@ -3,8 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Ignore secret plain
-backend/fastapi/secrets/genius_api_secret
+# Dont ignore the secret anymore for final submisson
+#backend/fastapi/secrets/genius_api_secret
 
 # Ignore nodejs
 node_modules
@@ -15,7 +15,8 @@ node_modules/
 
 # Data 
 *.csv
-*.json
+# don't ignore the json anymore since we need it for the dump to be uploaded
+# *.json
 
 # C extensions
 *.so
