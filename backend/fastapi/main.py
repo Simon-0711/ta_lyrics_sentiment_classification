@@ -7,6 +7,11 @@ from fastapi import FastAPI, HTTPException
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+import tensorflow as tf
+import pickle
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from sklearn import preprocessing
 
 import source.elasticsearch_functions as ef
 import utils as utils
@@ -78,7 +83,7 @@ async def search(body: Body):
     mood = song_dictionary["Mood"]
     song_to_compare = song_dictionary.pop('Mood', None)
     # debug log
-    print(f"The song: {song_dictionary['Song']} was labeled: {song_dictionary['Mood']}")
+    print(f"The song: {song_dictionary['Song']} was labeled: {mood}")
     
     return get_similar(song_to_compare=song_to_compare, mood=mood)
 
@@ -247,11 +252,6 @@ def get_similar(song_to_compare: dict, mood: str) -> dict:
 
 
 def classify(song_dictionary):
-    import tensorflow as tf
-    import pickle
-    from tensorflow.keras.preprocessing.sequence import pad_sequences
-    from sklearn import preprocessing
-    import numpy
 
     # preprocess the song
     preprocessed_lyrics = processing_pipeline(song_dictionary)
@@ -265,11 +265,11 @@ def classify(song_dictionary):
     # predict the mood
     model = tf.keras.models.load_model(CNN_MODEL)
     prediction = model.predict(text)
-    predicted_mood = numpy.argmax(prediction, axis=1)
+    predicted_mood = np.argmax(prediction, axis=1)
 
     # load the label encoder
     encoder = preprocessing.LabelEncoder()
-    encoder.classes_ = numpy.load(LABELENCODER, allow_pickle=True)
+    encoder.classes_ = np.load(LABELENCODER, allow_pickle=True)
     # transform the prediciton to an actual mood
     mood = encoder.inverse_transform(predicted_mood)[0]
     song_dictionary["Mood"] = mood

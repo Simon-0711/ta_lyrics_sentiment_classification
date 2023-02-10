@@ -42,6 +42,7 @@ export default function Main() {
                 "http://localhost:8000/search",
                 JSON.stringify({ song_name: song_name, artist_name: artist_name })
             )
+            console.log(response)
             response.then(res => {
                 setMood(res.mood)
                 setSimilarSongs(res.similar_songs)
