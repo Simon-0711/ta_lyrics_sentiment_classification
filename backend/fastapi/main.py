@@ -43,8 +43,8 @@ async def search(body: Body):
     song = body.song_name.lower()
     artist = body.artist_name.lower()
 
-    # song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
-    song_lyrics = "Not None"
+    song_lyrics = ef.get_stored_lyrics_of_song(song, artist)
+    
 
     if song_lyrics is None:
         print("The song was not found ... fetching")
@@ -82,12 +82,13 @@ async def search(body: Body):
 
     # search similar songs
     mood = song_dictionary["Mood"]
-    song_to_compare = song_dictionary.pop('Mood', None)
+    song_dictionary.pop('Mood', None)
     # debug log
     print(f"The song: {song_dictionary['Song']} was labeled: {mood}")
     
-    return get_similar(song_to_compare=song_to_compare, mood=mood)
-
+    
+    similar = get_similar(song_to_compare=song_dictionary, mood=mood)
+    print(f"similarity: {similar}")
     return {
         "similar_songs": {
             "similar_song_1": {
@@ -152,10 +153,11 @@ def get_top_n_similar(
         )[0][0]
         # filter similarity score = 1
         # this would mean, that somehow, the same song was found in the songs to compare
-        if similarity_score == 1:
+        if similarity_score >= 0.999:
             similarity_score = 0
         # Add score to list of all scores
         cosine_similarity_scores.append(similarity_score)
+        value["Similarity"] = similarity_score
     cosine_similarity_scores = np.array(cosine_similarity_scores)
 
     # get indexes of top n values
@@ -164,9 +166,10 @@ def get_top_n_similar(
     top_n_keys = np.array(list(songs_to_compare_to))[indexes_top_n]
     # get top n dict entries
     top_n_dict = {key: songs_to_compare_to[key] for key in top_n_keys}
+
     # remove lyrics from dict
     top_n_songs_no_lyrics = {
-        key: {"Song": value["Song"], "Artist": value["Artist"]}
+        key: {"Song": value["Song"], "Artist": value["Artist"], "Similarity": value["Similarity"] }
         for key, value in top_n_dict.items()
     }
 
@@ -187,19 +190,17 @@ def get_tf_idf_vectorized_lyrics(song_to_compare: dict, mood: str) -> tuple[dict
 
     # get documents with songs that have the same mood
     song_same_mood_dict = ef.get_all_documents_of_mood(mood)
-
     # check if song to compare with is within the song_same_mood_dict. If not add it for tf-idf vectorization
     song_to_compare_key = f'{song_to_compare["Song"]}_{song_to_compare["Artist"]}'
     if song_to_compare_key not in song_same_mood_dict.keys():
         song_same_mood_dict[song_to_compare_key] = song_to_compare
-
     # get list of all lyrics of songs with same mood
     lyrics_list = [document["Lyrics"] for document in song_same_mood_dict.values()]
-
     # initialize TfidfVectorizer # TODO: Maybe add more parameters or adjust current ones
     tfidf_vectorizer = TfidfVectorizer(
         analyzer="word", lowercase=True, stop_words="english", min_df=5
     )
+    print(f"tfidf_vectorizer: {tfidf_vectorizer}")
     # generate tdf-idf scores
     lyrics_tf_idf = tfidf_vectorizer.fit_transform(lyrics_list)
 
@@ -236,6 +237,7 @@ def get_similar(song_to_compare: dict, mood: str) -> dict:
     :rtype: tuple[dict, dict]
     """
 
+
     # Get all songs with same mood and vectorize all song lyrics with TD-IDF
     song_to_compare, songs_to_compare_to = get_tf_idf_vectorized_lyrics(
         song_to_compare=song_to_compare, mood=mood
@@ -253,9 +255,11 @@ def get_similar(song_to_compare: dict, mood: str) -> dict:
 
 
 def classify(song_dictionary):
+    # create new dict to not modify the old one by reference
+    song_dictionary_transformable = song_dictionary.copy()
 
     # preprocess the song
-    preprocessed_lyrics = processing_pipeline(song_dictionary)
+    preprocessed_lyrics = processing_pipeline(song_dictionary_transformable)
 
     # load the tokenizer
     with open(TOKENIZER, "rb") as handle:
