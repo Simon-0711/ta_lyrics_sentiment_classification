@@ -79,3 +79,23 @@ div.searchInput {
     font-size: 1.3em;
     color: #ff0000;
 }
+
+#output_songs {
+    display: block;
+    text-align: center;
+    margin-top: 8rem;
+    font-family: 'Petrona', serif;
+    font-weight: 700;
+    font-size: 1.7em;
+    color: #000000;
+}
+
+#output {
+    display: block;
+    text-align: center;
+    margin-top: 0.5rem;
+    font-family: 'Inconsolata', serif;
+    font-weight: 400;
+    font-size: 1.3em;
+    color: #000000;
+}

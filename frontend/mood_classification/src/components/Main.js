@@ -46,8 +46,6 @@ export default function Main() {
             response.then(res => {
                 setMood(res.mood)
                 setSimilarSongs(res.similar_songs)
-                console.log(res.mood)
-                console.log(res.similar_songs)
             })
             console.log("Request finished...")
         } else {
@@ -69,18 +67,12 @@ export default function Main() {
             </div>
             <button id='searchSimilarLyricsButton' name="searchLyrics" onClick={() => sendToFastApi(song_name, artist_name)}>Find Similar Songs</button>
             {wrongInputIsShown && <p id="errorMissingInput">Please fill out both song and artist name</p>}
-            <div id='recommendationsDiv'>
-                {similar_songs && Object.keys(similar_songs) && Object.keys(similar_songs).map((key, index) => {
-                    return (
-                        <p>{key}: {similar_songs[key]}</p>
-                    );
-                })}
-                {similar_songs && Object.keys(similar_songs) && Object.values(similar_songs).map((value, index) => {
-                    return (
-                        <p>key = {index}  {value}</p>
-                    );
-                })}
-            </div>
+            {mood != null && similar_songs != null && !wrongInputIsShown && <p id="output_songs">Similar songs with a {mood} mood: </p>}
+            {mood != null && similar_songs != null && !wrongInputIsShown && <p id="output">{Object.keys(similar_songs).map((key) => {
+                return (
+                    <p>Song: {similar_songs[key].Song}, Artist: {similar_songs[key].Artist}</p>
+                );
+            })}</p>}
         </div >
     )
 }
