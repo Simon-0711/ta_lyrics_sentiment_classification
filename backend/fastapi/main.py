@@ -2,7 +2,7 @@ from configuration import config
 from configuration.config import app as app
 from pydantic import BaseModel
 import lyricsgenius as genius  # https://github.com/johnwmillr/LyricsGenius
-from data_processing.preprocessing import processing_pipeline
+from utils import processing_pipeline
 from fastapi import FastAPI, HTTPException
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -16,9 +16,9 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import source.elasticsearch_functions as ef
 import utils as utils
 
-CNN_MODEL = "./cnn_model_v1"
-TOKENIZER = "./data_processing/tokenizer.pickle"
-LABELENCODER = "./data_processing/label_encoder.npy"
+CNN_MODEL = "./cnn/cnn_model_v1"
+TOKENIZER = "./cnn/cnn_model_v1/tokenizer.pickle"
+LABELENCODER = "./cnn/cnn_model_v1/label_encoder.npy"
 
 
 # TODO remove
@@ -97,6 +97,7 @@ async def search(body: Body) -> dict:
 
     # search similar songs
     mood = song_dictionary["Mood"]
+    test_print_console(mood)
     song_dictionary.pop('Mood', None)
     # debug log
     test_print_console(f"The song: {song_dictionary['Song']} was labeled: {mood}")
