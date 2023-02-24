@@ -3,8 +3,6 @@
 # Here is only the abreviated code with less comments and prints
 # to comprehend the processing steps
 #############
-
-
 import os
 import pickle
 import sys
@@ -24,13 +22,14 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from utils import *
 
+# Add parent dir to system path
 sys.path.append('../')
-# Preprocessing steps and idea for the model is used from
-# https://www.kaggle.com/code/jagannathrk/word2vec-cnn-text-classification
 
 
 def processing_pipeline(song_data: pd.DataFrame) -> pd.DataFrame:
     """Function executes the entire processing pipeline on given song data.
+    Preprocessing steps and idea for the model is used from
+    https://www.kaggle.com/code/jagannathrk/word2vec-cnn-text-classification
     Preprocessing steps:
 
     :param song_data: song data saved in a json file containing song name,
@@ -111,14 +110,13 @@ np.save(model_path+'/label_encoder.npy', le.classes_)
 x_train, x_test, y_train, y_test = train_test_split(
     np.array(text), y, test_size=0.2, stratify=y)
 
-# helper function to use the word2vec as an layer in keras
-# taken from the gensim wikipage:
-# https://github.com/RaRe-Technologies/gensim/wiki/Using-Gensim-Embeddings-with-Keras-and-Tensorflow
-
 
 def gensim_to_keras_embedding(model, train_embeddings: bool = False):
     """Function generates a Keras 'Embedding' layer with weights set
     from Word2Vec model's learned word embeddings.
+    helper function to use the word2vec as an layer in keras
+    taken from the gensim wikipage:
+    https://github.com/RaRe-Technologies/gensim/wiki/Using-Gensim-Embeddings-with-Keras-and-Tensorflow
 
     :param model: Word2Vec Embedding model
     :type model: gensim.model
