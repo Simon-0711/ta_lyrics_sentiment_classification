@@ -2,17 +2,18 @@ import pickle
 
 import lyricsgenius as genius  # https://github.com/johnwmillr/LyricsGenius
 import numpy as np
-import source.elasticsearch_functions as ef
 import tensorflow as tf
-import utils as utils
-from configuration.config import app as app
-from fastapi import HTTPException
 from pydantic import BaseModel
 from sklearn import preprocessing
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+import source.elasticsearch_functions as ef
+import utils as utils
+from configuration.config import app as app
+from fastapi import HTTPException
 from utils import processing_pipeline
 
 CNN_MODEL = "./cnn/cnn_model_v1"
@@ -121,13 +122,16 @@ def sklearn_cosine(x: np.array, y: np.array) -> int:
 def get_top_n_similar(
     song_to_compare: dict, songs_to_compare_to: dict, top_n_simlar: int = 3
 ) -> list:
-    """Function which takes in three parameters: song_to_compare, songs_to_compare_to, and top_n_similar,
-    and returns a list of top n most similar songs based on the cosine similarity score between their vectorized lyrics.
-    The function first calculates the cosine similarity score between the vectorized lyric of song_to_compare and each of
+    """Function which takes in three parameters: song_to_compare,
+    songs_to_compare_to, and top_n_similar, and returns a list of top n
+    most similar songs based on the cosine similarity score between their
+    vectorized lyrics. The function first calculates the cosine similarity
+    score between the vectorized lyric of song_to_compare and each of
     the songs in songs_to_compare_to using the sklearn_cosine function.
-    It then filters out any scores equal to 1 (which would mean that the same song was found in songs_to_compare_to).
-    The indexes of the top n scores are then found and the corresponding song information (song name and artist name)
-    is returned in the form of a list.
+    It then filters out any scores equal to 1 (which would mean that the
+    same song was found in songs_to_compare_to). The indexes of the top n
+    scores are then found and the corresponding song information
+    (song name and artist name) is returned in the form of a list.
 
     :param song_to_compare: lyric to find similar songs for
     :type song_to_compare: dict
@@ -135,7 +139,8 @@ def get_top_n_similar(
     :type songs_to_compare_to: dict
     :param top_n_simlar: number of most similar songs to return
     :type top_n_simlar: int
-    :return: list of top n most similar songs containing song name and artist name
+    :return: list of top n most similar songs containing song name
+        and artist name
     :rtype: list
     """
     cosine_similarity_scores = []
@@ -183,12 +188,17 @@ def get_tf_idf_vectorized_lyrics(
 ) -> tuple[dict, dict]:
     """Function that returns the tf-idf vectors for given lyrics.
 
-    :param song_to_compare: dict with song name, artist name and lyrics for song to compare with.
+    :param song_to_compare: dict with song name, artist name and lyrics
+        for song to compare with.
     :param mood: mood of the song to compare with.
 
-    :return: dict for the song we want to compare each lyrics of certain mood with. It contains information on the song name, artist name, lyrics and vectorized lyric.
+    :return: dict for the song we want to compare each lyrics of certain
+        mood with. It contains information on the song name, artist name,
+        lyrics and vectorized lyric.
     :rtype: dict
-    :return: dict with dicts that contain song name, artist name, lyrics and vectorized lyrics for each song of given mood (except of the song to compare with).
+    :return: dict with dicts that contain song name, artist name, lyrics
+        and vectorized lyrics for each song of given mood
+        (except of the song to compare with).
     :rtype: dict
     """
 
@@ -232,9 +242,9 @@ def get_tf_idf_vectorized_lyrics(
 
 
 def get_similar(song_to_compare: dict, mood: str) -> dict:
-    """Function gets top n similar song names and artist names based on passed
-    song_to_compare and mood.
-    First it searches all songs with the same mood and vectorizes their lyrics with TD-IDF.
+    """Function gets top n similar song names and artist names
+    based on passed song_to_compare and mood. First it searches
+    all songs with the same mood and vectorizes their lyrics with TD-IDF.
     After that, the top n similar songs are filtered using TD-IDF.
 
     :param song_to_compare: Song to find similar songs for
