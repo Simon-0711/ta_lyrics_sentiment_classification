@@ -75,7 +75,7 @@ def normalize_training_data(song_df):
 
 
 # read in the data of our dataset which has been extended with the lastfm labels
-df = pd.read_csv('../../../data_exploration/data/song-data-labels-cleaned.csv')
+df = pd.read_csv('../../../data_exploration/data/song-data-labels-cleaned-seven-moods.csv')
 df = normalize_training_data(df)
 
 df = processing_pipeline(df)
@@ -154,26 +154,27 @@ def gensim_to_keras_embedding(model, train_embeddings=False):
 
 
 # Defining the model
+# use the hyperparameters from the hyperparameter tuning notebook (CNN-Model-Crreation under the directory data-exploration)
 keras_model = Sequential()
-keras_model.add(gensim_to_keras_embedding(word2vec_model, True))
-keras_model.add(Dropout(0.2))
-keras_model.add(Conv1D(50, 5, activation='relu', padding='same', strides=1))
-keras_model.add(Conv1D(50, 5, activation='relu', padding='same', strides=1))
-keras_model.add(MaxPool1D())
+keras_model.add(gensim_to_keras_embedding(word2vec_model, False))
 keras_model.add(Dropout(0.2))
 keras_model.add(Conv1D(100, 5, activation='relu', padding='same', strides=1))
 keras_model.add(Conv1D(100, 5, activation='relu', padding='same', strides=1))
 keras_model.add(MaxPool1D())
 keras_model.add(Dropout(0.2))
-keras_model.add(Conv1D(150, 5, activation='relu', padding='same', strides=1))
-keras_model.add(Conv1D(150, 5, activation='relu', padding='same', strides=1))
+keras_model.add(Conv1D(200, 5, activation='relu', padding='same', strides=1))
+keras_model.add(Conv1D(200, 5, activation='relu', padding='same', strides=1))
+keras_model.add(MaxPool1D())
+keras_model.add(Dropout(0.2))
+keras_model.add(Conv1D(400, 5, activation='relu', padding='same', strides=1))
+keras_model.add(Conv1D(400, 5, activation='relu', padding='same', strides=1))
 keras_model.add(GlobalMaxPool1D())
 keras_model.add(Dropout(0.2))
 keras_model.add(Dense(200))
 keras_model.add(Activation('relu'))
 keras_model.add(Dropout(0.2))
 # Number of moods to be classified to
-keras_model.add(Dense(17))
+keras_model.add(Dense(7))
 keras_model.add(Activation('softmax'))
 keras_model.compile(loss='binary_crossentropy', metrics=['acc'], optimizer='adam')
 
