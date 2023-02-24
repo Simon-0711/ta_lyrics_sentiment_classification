@@ -5,4 +5,5 @@ keras
 scikit-learn
 fastapi
 pandas
-
+gensim
+numpy
