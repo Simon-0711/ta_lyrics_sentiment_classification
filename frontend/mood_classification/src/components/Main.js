@@ -6,9 +6,12 @@ export default function Main() {
     const [artist_name, set_artist_name] = useState(null);
     // Saves if user input was correct
     const [wrongInputIsShown, setWrongInputIsShown] = useState(false);
-    // Saves mood and the similar songs for the given song
+    // Saves mood and the similar songs and the looked up sopng/artist
     const [mood, setMood] = useState(null);
     const [similar_songs, setSimilarSongs] = useState(null);
+    const [returned_song, setReturnedSong] = useState(null);
+    const [returned_artist, setReturnedArtist] = useState(null);
+
 
     // Functions to get song and artist name
     function getSongName(input_box_input) {
@@ -44,6 +47,8 @@ export default function Main() {
             )
             console.log(response)
             response.then(res => {
+                setReturnedSong(res.Song)
+                setReturnedArtist(res.Artist)
                 setMood(res.mood)
                 setSimilarSongs(res.similar_songs)
             })
@@ -51,6 +56,7 @@ export default function Main() {
         } else {
             // Display error message
             setWrongInputIsShown(true)
+            setReturnedSong(null)
             setMood(null)
             setSimilarSongs(null)
         }
@@ -67,8 +73,8 @@ export default function Main() {
             </div>
             <button id='searchSimilarLyricsButton' name="searchLyrics" onClick={() => sendToFastApi(song_name, artist_name)}>Find Similar Songs</button>
             {wrongInputIsShown && <p id="errorMissingInput">Please fill out both song and artist name</p>}
-            {mood != null && similar_songs != null && !wrongInputIsShown && <p id="output_songs">Similar songs with a {mood} mood: </p>}
-            {mood != null && similar_songs != null && !wrongInputIsShown && <p id="output">{Object.keys(similar_songs).map((key) => {
+            {mood != null && similar_songs != null && returned_artist != null && returned_song != null && !wrongInputIsShown && <p id="output_songs">Similar songs for '{returned_song}' from '{returned_artist}' with a '{mood}' mood: </p>}
+            {mood != null && similar_songs != null && returned_artist != null && returned_song != null && !wrongInputIsShown && <p id="output">{Object.keys(similar_songs).map((key) => {
                 return (
                     <p>Song: {similar_songs[key].Song}, Artist: {similar_songs[key].Artist}, Similarity: {similar_songs[key].Similarity} %</p>
                 );

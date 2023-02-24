@@ -16,9 +16,9 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import source.elasticsearch_functions as ef
 import utils as utils
 
-CNN_MODEL = "./cnn/cnn_model_v1"
-TOKENIZER = "./cnn/cnn_model_v1/tokenizer.pickle"
-LABELENCODER = "./cnn/cnn_model_v1/label_encoder.npy"
+CNN_MODEL = "./cnn/cnn_model_v2"
+TOKENIZER = "./cnn/cnn_model_v2/tokenizer.pickle"
+LABELENCODER = "./cnn/cnn_model_v2/label_encoder.npy"
 
 
 # TODO remove
@@ -76,6 +76,7 @@ async def search(body: Body) -> dict:
         # return 404 if song not found
         if lyrics is None:
             raise HTTPException(status_code=404, detail="Lyrics for Song not found")
+            return 404
 
         test_print_console(f"Artist: {lyrics.artist.lower()} - Lyrics: {lyrics.title.lower()}")
         # Classify the mood 
@@ -99,13 +100,16 @@ async def search(body: Body) -> dict:
     mood = song_dictionary["Mood"]
     test_print_console(mood)
     song_dictionary.pop('Mood', None)
+    song_dictionary.pop('Lyrics', None)
     # debug log
     test_print_console(f"The song: {song_dictionary['Song']} was labeled: {mood}")
 
     # get top n similar songs
     similar_songs = get_similar(song_to_compare=song_dictionary, mood=mood)
     test_print_console(str(similar_songs))
-
+    # combine all the data for the return
+    similar_songs.update(song_dictionary)
+    print(similar_songs)
     return similar_songs
 
 
