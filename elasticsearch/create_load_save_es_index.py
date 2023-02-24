@@ -1,10 +1,10 @@
-import os
 import json
+import os
 import time
 
-from elasticsearch import Elasticsearch
-from elasticsearch import helpers
 import pandas as pd
+
+from elasticsearch import Elasticsearch, helpers
 
 
 def create_es_index_plain():
@@ -31,8 +31,9 @@ def create_es_index_plain():
         },
     )
 
+
 def create_es_index():
-    # Todo: discuss if this moethod is jst doubling the one below (load) 
+    # Todo: discuss if this moethod is jst doubling the one below (load)
     # since the dump is most likely equal or almost equal to our initial dataset
     """Create elasticsearch index for our lyrics mood classification using the saved ground truth data in '../data_exploration/data/song-data-labels-cleaned.csv'."""
 
@@ -174,6 +175,7 @@ def save_es_index():
 
 if __name__ == "__main__":
     from os.path import exists
+
     # check if dump exists
     if exists("/opt/dump.json"):
         load_es_index("/opt/dump.json")

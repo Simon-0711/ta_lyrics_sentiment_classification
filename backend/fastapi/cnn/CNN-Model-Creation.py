@@ -1,83 +1,72 @@
 #############
 # The complete code (notebook) can be found in the data_exploration directory
-# Here is only the abreviated code with less comments and prints to comprehend the processing steps
+# Here is only the abreviated code with less comments and prints
+# to comprehend the processing steps
 #############
 
 
-import pandas as pd
-from tensorflow.keras.layers import Dense, Embedding,GlobalMaxPooling1D
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Embedding
+import os
+import pickle
+import sys
+
 import numpy as np
 import pandas as pd
 from gensim.models.word2vec import Word2Vec
-from tensorflow import keras
-from sklearn.model_selection import train_test_split
-from keras.utils import to_categorical
-from keras.layers import Dense, Dropout, Conv1D, MaxPool1D, GlobalMaxPool1D, Embedding, Activation
-from keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.layers import (Activation, Conv1D, Dense, Dropout, Embedding,
+                          GlobalMaxPool1D, MaxPool1D)
 from keras.models import Sequential
-import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem.snowball import PorterStemmer
+from keras.preprocessing.text import Tokenizer
+from keras.utils import to_categorical
 from sklearn import preprocessing
-import pickle
-import sys
-import os
- 
-sys.path.append('../')
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.layers import Dense, Embedding, GlobalMaxPooling1D
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from utils import *
-# Preprocessing steps and idea for the model is used from 
+
+sys.path.append('../')
+# Preprocessing steps and idea for the model is used from
 # https://www.kaggle.com/code/jagannathrk/word2vec-cnn-text-classification
 
-# Override preprocessing pipeline so that it fits on the dataframe
-def processing_pipeline(song_data):
-    """Use this function to execute the entire processing pipeline on given song data.
-    Preprocessing steps:
-    - Tokenization
-    - Stop word removal
-    - Punctuation removal
-    - Lemmatization
-    - ...
 
-    :param song_data: song data saved in a json file containing song name, artist name and lyrics
-    :type song_data: dict
+def processing_pipeline(song_data: pd.DataFrame) -> pd.DataFrame:
+    """Function executes the entire processing pipeline on given song data.
+    Preprocessing steps:
+
+    :param song_data: song data saved in a json file containing song name,
+        artist name and lyrics
+    :type song_data: pd.DataFrame
     :return: preprocessed song data
-    :rtype: dict
+    :rtype: pd.DataFrame
     """
 
-    nlp = spacy.load("en_core_web_sm", disable = ['ner'])
-    
+    nlp = spacy.load("en_core_web_sm", disable=['ner'])
+
     for row in range(len(song_data)):
         text_nlp_pipe = list(nlp.pipe([song_data.iloc[row]["Lyric"]]))
-    
+
         # Tokenization
-        song_data.at[row,"Lyric"] = tokenization(text_nlp_pipe)
+        song_data.at[row, "Lyric"] = tokenization(text_nlp_pipe)
         # Stop word removal
-        song_data.at[row,"Lyric"] = stop_word_removal(song_data.iloc[row]["Lyric"])
+        song_data.at[row, "Lyric"] = stop_word_removal(
+            song_data.iloc[row]["Lyric"])
         # Punctuation removal
-        song_data.at[row,"Lyric"] = punctutation_removal(song_data.iloc[row]["Lyric"])
+        song_data.at[row, "Lyric"] = punctutation_removal(
+            song_data.iloc[row]["Lyric"])
         # Lemmatization
-        song_data.at[row,"Lyric"] = lemmatization(song_data.iloc[row]["Lyric"])
-        song_data.at[row,"Lyric"] = " ".join(song_data.iloc[row]["Lyric"])
-        song_data.at[row,"Lyric"] = song_data.iloc[row]["Lyric"].lower()
-        if row%500 == 0 and row >= 500:
+        song_data.at[row, "Lyric"] = lemmatization(
+            song_data.iloc[row]["Lyric"])
+        song_data.at[row, "Lyric"] = " ".join(song_data.iloc[row]["Lyric"])
+        song_data.at[row, "Lyric"] = song_data.iloc[row]["Lyric"].lower()
+        if row % 500 == 0 and row >= 500:
             print(f"processsed: {row} rows out of {len(song_data)}")
     return song_data
 
 
-def normalize_training_data(song_df):
-    normalized_song_df = df
-    return normalized_song_df
-
-
-# read in the data of our dataset which has been extended with the lastfm labels
+# read in the data of our dataset which has been extended
+# with the lastfm labels
 df = pd.read_csv('../../../data_exploration/data/song-data-labels-cleaned.csv')
-df = normalize_training_data(df)
-
+# process data with pipeline
 df = processing_pipeline(df)
 
 # merge lyrics together
@@ -86,9 +75,11 @@ for i in df['Lyric']:
     lyrics.append(i.split())
 
 # train the word2vec model
-# vector size according to https://moj-analytical-services.github.io/NLP-guidance/NNmodels.html#:~:text=The%20standard%20Word2Vec%20pre%2Dtrained,fewer%20dimensions%20to%20represent%20them.
+# vector size according to #
+# https://moj-analytical-services.github.io/NLP-guidance/NNmodels.html#:~:text=The%20standard%20Word2Vec%20pre%2Dtrained,fewer%20dimensions%20to%20represent%20them.
 # mincount = 2 to prevent misspellings
-word2vec_model = Word2Vec(lyrics, vector_size=150, window=5, min_count=2, workers=16)
+word2vec_model = Word2Vec(lyrics, vector_size=150,
+                          window=5, min_count=2, workers=16)
 
 # use the keras tokenizer and apply it to the lyrics
 # number in first row is the vocab size from the above print statement
@@ -97,10 +88,9 @@ token.fit_on_texts(df['Lyric'])
 text = token.texts_to_sequences(df['Lyric'])
 text = pad_sequences(text, 180)
 
-# TODO: test if the for loop works and saving the encoders and model
 # set the model path dynamically
 version = 0
-for i in range(1,100):
+for i in range(1, 100):
     if not os.path.exists('cnn_model_v'+str(i)):
         version = i
         break
@@ -118,31 +108,32 @@ y = to_categorical(y)
 np.save(model_path+'/label_encoder.npy', le.classes_)
 
 
-x_train, x_test, y_train, y_test = train_test_split(np.array(text), y, test_size=0.2, stratify=y)
+x_train, x_test, y_train, y_test = train_test_split(
+    np.array(text), y, test_size=0.2, stratify=y)
 
-# helper function to use the word2vec as an layer in keras 
-# taken from the gensim wikipage: https://github.com/RaRe-Technologies/gensim/wiki/Using-Gensim-Embeddings-with-Keras-and-Tensorflow
+# helper function to use the word2vec as an layer in keras
+# taken from the gensim wikipage:
+# https://github.com/RaRe-Technologies/gensim/wiki/Using-Gensim-Embeddings-with-Keras-and-Tensorflow
 
-from tensorflow.keras.layers import Embedding
 
-def gensim_to_keras_embedding(model, train_embeddings=False):
-    """Get a Keras 'Embedding' layer with weights set from Word2Vec model's learned word embeddings.
+def gensim_to_keras_embedding(model, train_embeddings: bool = False):
+    """Function generates a Keras 'Embedding' layer with weights set
+    from Word2Vec model's learned word embeddings.
 
-    Parameters
-    ----------
-    train_embeddings : bool
-        If False, the returned weights are frozen and stopped from being updated.
-        If True, the weights can / will be further updated in Keras.
-
-    Returns
-    -------
-    `keras.layers.Embedding`
-        Embedding layer, to be used as input to deeper network layers.
-
+    :param model: Word2Vec Embedding model
+    :type model: gensim.model
+    :param train_embeddings: If False, the returned weights are frozen
+        and stopped from being updated. If True, the weights can / will
+        be further updated in Keras, defaults to False
+    :type train_embeddings: bool, optional
+    :return: Embedding layer, to be used as input to deeper network layers.
+    :rtype: `keras.layers.Embedding`
     """
+
     keyed_vectors = model.wv  # structure holding the result of training
-    weights = keyed_vectors.vectors  # vectors themselves, a 2D numpy array    
-    index_to_key = keyed_vectors.index_to_key  # which row in `weights` corresponds to which word?
+    weights = keyed_vectors.vectors  # vectors themselves, a 2D numpy array
+    # which row in `weights` corresponds to which word?
+    index_to_key = keyed_vectors.index_to_key
 
     layer = Embedding(
         input_dim=weights.shape[0],
@@ -175,9 +166,11 @@ keras_model.add(Dropout(0.2))
 # Number of moods to be classified to
 keras_model.add(Dense(17))
 keras_model.add(Activation('softmax'))
-keras_model.compile(loss='binary_crossentropy', metrics=['acc'], optimizer='adam')
+keras_model.compile(loss='binary_crossentropy',
+                    metrics=['acc'], optimizer='adam')
 
-keras_model.fit(x_train, y_train, batch_size=32, epochs=3, validation_data=(x_test, y_test))
+keras_model.fit(x_train, y_train, batch_size=32, epochs=3,
+                validation_data=(x_test, y_test))
 
 # save keras model
 keras_model.save(model_path)

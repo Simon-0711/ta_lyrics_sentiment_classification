@@ -1,9 +1,11 @@
 import re
+
 import spacy
+
 
 def chorus_normalization(original_lyrics):
     """
-    Function to get rid of unnecessary tokens in the lyrics which don't
+    Function gets rid of unnecessary tokens in the lyrics which don't
     add any value to he predections. 
 
     input: 
@@ -22,26 +24,19 @@ def chorus_normalization(original_lyrics):
     lyrics = re.sub("\<[^>]*\>", "", lyrics)
     # filter everything in ::..::
     lyrics = re.sub("::[^(::)]*::", "", lyrics)
-    
+
     # filter more specific combinations of chorus
     lyrics = re.sub("\nchorus\n", "", lyrics)
     lyrics = re.sub("\[chorus", "", lyrics)
     lyrics = re.sub("\nchorus", "", lyrics)
     lyrics = re.sub("pre[-]?chorus", "", lyrics)
     lyrics = re.sub("\nrepeat chorus\n", "", lyrics)
-    
-    return lyrics
-    # TODO: ideas for further cleaning:
-        # TODO: could also just remove something like chorus, verse, ... completely since it should not have impact on classification (just need to be careful with words containing the keywords like "uni-verse")
-        # TODO: do same/similar specific "chorus" cleaning steps for verse, ...
-        # TODO: remove all artists names
-        # TODO: replace \n, \w, \t,... with " " (after all cleaning steps involving \n, maybe regarding chorus, ...) 
-        # TODO: as last step remove all non-alphabetic characters
 
+    return lyrics
 
 
 def processing_pipeline(song_data: dict) -> dict:
-    """Use this function to execute the entire processing pipeline on given song data.
+    """Function executes the entire processing pipeline on given song data.
     Preprocessing steps:
     - Tokenization
     - Stop word removal
@@ -55,9 +50,9 @@ def processing_pipeline(song_data: dict) -> dict:
     :rtype: dict
     """
 
-    nlp = spacy.load("en_core_web_sm", disable = ['ner'])
+    nlp = spacy.load("en_core_web_sm", disable=['ner'])
     text_nlp_pipe = list(nlp.pipe([song_data["Lyrics"]]))
-    
+
     # Tokenization
     song_data["Lyrics"] = tokenization(text_nlp_pipe)
     # Stop word removal
@@ -70,10 +65,8 @@ def processing_pipeline(song_data: dict) -> dict:
     return song_data
 
 
-
-
 def tokenization(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens.token.Token]:
-    """Use this function to tokenize text.
+    """Function tokenizes text.
 
     :param text: Text as list
     :type text: list[spacy.tokens.token.Token]
@@ -82,7 +75,7 @@ def tokenization(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens.toke
     """
 
     token_list = []
-    for doc in text: 
+    for doc in text:
         # iterate over tokens in docs
         for token in doc:
             token_list.append(token)
@@ -90,8 +83,8 @@ def tokenization(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens.toke
     return token_list
 
 
-def stop_word_removal(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens.token.Token]: 
-    """Use this function to remove stop words. 
+def stop_word_removal(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens.token.Token]:
+    """Function removes stop words. 
 
     :param text: Tokens to remove stop words from 
     :type text: list[spacy.tokens.token.Token]
@@ -102,14 +95,14 @@ def stop_word_removal(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens
     token_list_without_stop = []
     # Don't add token to list if stop word
     for token in text:
-        if token.is_stop == False: 
+        if token.is_stop == False:
             token_list_without_stop.append(token)
 
     return token_list_without_stop
 
 
-def punctutation_removal(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens.token.Token]: 
-    """Use this function to remove punctuation.
+def punctutation_removal(text: list[spacy.tokens.token.Token]) -> list[spacy.tokens.token.Token]:
+    """Function removes punctuation.
 
     :param text: Tokens to remove punctuation from
     :type text: list[spacy.tokens.token.Token]
@@ -126,8 +119,8 @@ def punctutation_removal(text: list[spacy.tokens.token.Token]) -> list[spacy.tok
     return token_list_no_stop_no_punct
 
 
-def lemmatization(text: list[spacy.tokens.token.Token]) -> list[str]: 
-    """Use this function to lemmatize a given text.
+def lemmatization(text: list[spacy.tokens.token.Token]) -> list[str]:
+    """Function lemmatizes a given text.
 
     :param text: Tokens to lemmatize
     :type text: list[spacy.tokens.token.Token]
@@ -136,8 +129,7 @@ def lemmatization(text: list[spacy.tokens.token.Token]) -> list[str]:
     """
 
     token_list_no_stop_no_punct_lemmatized = []
-    for token in text: 
+    for token in text:
         if "\n" not in token.lemma_:
             token_list_no_stop_no_punct_lemmatized.append(token.lemma_)
     return token_list_no_stop_no_punct_lemmatized
-

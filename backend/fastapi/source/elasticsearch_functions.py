@@ -127,7 +127,8 @@ def get_all_documents_of_mood(mood):
     es = Elasticsearch(hosts=es_host)
 
     # search for all document of given mood (set size to 10000 to get all documents, as it is max number of documents that can be found at once and there are less than 10000 documents in the index for each mood)
-    results = es.search(index=index_name, size=10000, query={"match": {"mood": mood}})
+    results = es.search(index=index_name, size=10000,
+                        query={"match": {"mood": mood}})
     es.close()
 
     # check if given mood has songs in the index
