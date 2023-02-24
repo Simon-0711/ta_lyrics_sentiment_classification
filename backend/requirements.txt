@@ -3,4 +3,6 @@ Elasticsearch
 tensorflow
 keras
 scikit-learn
+fastapi
+pandas
 
