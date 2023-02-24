@@ -11,7 +11,8 @@ export default function Main() {
     const [similar_songs, setSimilarSongs] = useState(null);
     const [returned_song, setReturnedSong] = useState(null);
     const [returned_artist, setReturnedArtist] = useState(null);
-
+    // error variable to catch the error if no song was found
+    const [songNotFound, setsongNotFound] = useState(null);
 
     // Functions to get song and artist name
     function getSongName(input_box_input) {
@@ -47,10 +48,16 @@ export default function Main() {
             )
             console.log(response)
             response.then(res => {
-                setReturnedSong(res.Song)
-                setReturnedArtist(res.Artist)
-                setMood(res.mood)
-                setSimilarSongs(res.similar_songs)
+                if(res.error === 404) {
+                    setsongNotFound(true)
+                }
+                else{
+                    setReturnedSong(res.Song)
+                    setReturnedArtist(res.Artist)
+                    setMood(res.mood)
+                    setSimilarSongs(res.similar_songs)
+                    setsongNotFound(false)
+                }
             })
             console.log("Request finished...")
         } else {
@@ -59,6 +66,7 @@ export default function Main() {
             setReturnedSong(null)
             setMood(null)
             setSimilarSongs(null)
+            setsongNotFound(null)
         }
     }
 
@@ -73,12 +81,14 @@ export default function Main() {
             </div>
             <button id='searchSimilarLyricsButton' name="searchLyrics" onClick={() => sendToFastApi(song_name, artist_name)}>Find Similar Songs</button>
             {wrongInputIsShown && <p id="errorMissingInput">Please fill out both song and artist name</p>}
-            {mood != null && similar_songs != null && returned_artist != null && returned_song != null && !wrongInputIsShown && <p id="output_songs">Similar songs for '{returned_song}' from '{returned_artist}' with a '{mood}' mood: </p>}
-            {mood != null && similar_songs != null && returned_artist != null && returned_song != null && !wrongInputIsShown && <p id="output">{Object.keys(similar_songs).map((key) => {
+            {songNotFound && <p id="errorMissingInput">No result for this song and artist combination. Check the input for typos or try another one!</p>}
+            {!songNotFound && mood != null && similar_songs != null && returned_artist != null && returned_song != null && !wrongInputIsShown && <p id="output_songs">Similar songs for '{returned_song}' from '{returned_artist}' with a '{mood}' mood: </p>}
+            {!songNotFound && mood != null && similar_songs != null && returned_artist != null && returned_song != null && !wrongInputIsShown && <p id="output">{Object.keys(similar_songs).map((key) => {
                 return (
                     <p>Song: {similar_songs[key].Song}, Artist: {similar_songs[key].Artist}, Similarity: {similar_songs[key].Similarity} %</p>
                 );
             })}</p>}
+            
         </div >
     )
 }

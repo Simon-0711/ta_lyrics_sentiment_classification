@@ -75,8 +75,9 @@ async def search(body: Body) -> dict:
 
         # return 404 if song not found
         if lyrics is None:
-            raise HTTPException(status_code=404, detail="Lyrics for Song not found")
-            return 404
+            #raise HTTPException(status_code=404, detail="Lyrics for Song not found")
+            print(f"Couldn't find a corresponding song to {song} from {artist}")
+            return {"error": 404}
 
         test_print_console(f"Artist: {lyrics.artist.lower()} - Lyrics: {lyrics.title.lower()}")
         # Classify the mood 
@@ -94,22 +95,25 @@ async def search(body: Body) -> dict:
     else:
         print("The song was found")
         mood = ef.get_stored_mood_of_song(song, artist)
+        song,artist = ef.get_stored_song(song,artist)
         song_dictionary = {"Song": song, "Artist": artist, "Lyrics": song_lyrics.lower(), "Mood": mood}
 
     # search similar songs
     mood = song_dictionary["Mood"]
     test_print_console(mood)
     song_dictionary.pop('Mood', None)
-    song_dictionary.pop('Lyrics', None)
     # debug log
     test_print_console(f"The song: {song_dictionary['Song']} was labeled: {mood}")
 
     # get top n similar songs
     similar_songs = get_similar(song_to_compare=song_dictionary, mood=mood)
+    # pop the lyrics to reduce size of return value
+    song_dictionary.pop("Lyrics", None)
+    song_dictionary.pop("Vectorized_lyric", None)
+    #song_dictionary.pop('Lyrics', None)
     test_print_console(str(similar_songs))
     # combine all the data for the return
     similar_songs.update(song_dictionary)
-    print(similar_songs)
     return similar_songs
 
 
