@@ -31,7 +31,7 @@ def chorus_normalization(original_lyrics):
     lyrics = re.sub("\nchorus", "", lyrics)
     lyrics = re.sub("pre[-]?chorus", "", lyrics)
     lyrics = re.sub("\nrepeat chorus\n", "", lyrics)
-
+    
     return lyrics
 
 

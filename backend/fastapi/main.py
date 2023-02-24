@@ -184,7 +184,7 @@ def get_tf_idf_vectorized_lyrics(
     """Function that returns the tf-idf vectors for given lyrics.
 
     :param song_to_compare: dict with song name, artist name and lyrics for song to compare with.
-    :param mood: mood of the song to compare with. # TODO: Add mood to first input parameter?
+    :param mood: mood of the song to compare with.
 
     :return: dict for the song we want to compare each lyrics of certain mood with. It contains information on the song name, artist name, lyrics and vectorized lyric.
     :rtype: dict
@@ -205,7 +205,6 @@ def get_tf_idf_vectorized_lyrics(
     lyrics_list = [
         document["Lyrics"] for document in song_same_mood_dict.values()
     ]
-    # initialize TfidfVectorizer # TODO: Maybe add more parameters or adjust
     # current ones
     tfidf_vectorizer = TfidfVectorizer(
         analyzer="word", lowercase=True, stop_words="english", min_df=5
@@ -220,11 +219,11 @@ def get_tf_idf_vectorized_lyrics(
     )
     vectorized_lyrics = SVD.fit_transform(
         lyrics_tf_idf
-    )  # TODO: check the dimension. Should be (#documents, 300)
+    )
 
     for key, vectorized_lyric in zip(
         list(song_same_mood_dict.keys()), vectorized_lyrics
-    ):  # TODO: check if I am adding the rows instead of the columns of vectorized_lyrics
+    ):
         song_same_mood_dict[key]["Vectorized_lyric"] = vectorized_lyric
 
     song_to_compare = song_same_mood_dict.pop(song_to_compare_key)
