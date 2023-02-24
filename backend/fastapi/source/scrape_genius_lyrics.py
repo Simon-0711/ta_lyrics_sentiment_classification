@@ -10,8 +10,7 @@ def scrape_lyrics(song_name, artist_name):
     :return: Lyrics of given song and artist name.
     :rtype: String or None
     """
-
-    # TODO: Use secret file instead of plaintext secret
+    
     api_token = "TQdTzth8QuovVPC3AWrU4EPADP2v2mil2_TXw0xWA-50wmFgsK8-04UWD6vRRLkR"
 
     api = genius.Genius(api_token)

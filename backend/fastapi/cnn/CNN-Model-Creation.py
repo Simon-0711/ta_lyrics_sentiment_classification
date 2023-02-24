@@ -97,7 +97,6 @@ token.fit_on_texts(df['Lyric'])
 text = token.texts_to_sequences(df['Lyric'])
 text = pad_sequences(text, 180)
 
-# TODO: test if the for loop works and saving the encoders and model
 # set the model path dynamically
 version = 0
 for i in range(1,100):
