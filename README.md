@@ -8,8 +8,8 @@ A Song Recommendation System using Lyrics Sentiment Classification
 - Simon Pavicic (simon.pavicic@stud.uni-heidelberg.de)
 - Maximilian Ludwig (maximilian.ludwig02@stud.uni-heidelberg.de)
 
-#### Existing code fragments
-In this project we will use the Github project https://github.com/workmanjack/lyric-mood-classification as our starting point. We will utilize the developed CNN for mood classification based on lyrics in this project and apply it to our dataset (https://www.kaggle.com/datasets/neisse/scrapped-lyrics-from-6-genres?select=lyrics-data.csv).
+#### Existing code fragments and dataset
+In this project we will use the Github project https://github.com/workmanjack/lyric-mood-classification as our starting point. We will utilize the developed CNN for mood classification based on lyrics in this project and apply it to our dataset (https://www.kaggle.com/datasets/neisse/scrapped-lyrics-from-6-genres?select=lyrics-data.csv). The data of the dataset needs to be downloaded from heibox (https://heibox.uni-heidelberg.de/d/e7f92e149b804a82be8b/) and the <em>data</em> folder containing the .csv files needs to be placed in the <em> ta_lyrics_sentiment_classification/data_exploration/ </em> folder.
 
 #### Utilized libraries
 The utilized libraries can be found in our requirements.txt file in the root of our Github project. In general, the code of our project can be started by simply using the command ``` docker-compose up ```, which installs, builds and starts all necessary services and libraries. Only docker (preferably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your system.
