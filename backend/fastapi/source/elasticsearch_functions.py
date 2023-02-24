@@ -15,7 +15,6 @@ def add_es_document(song_name, artist_name, lyrics, mood):
 
     global index_name
 
-    # TODO: Add authentication for elasticsearch?
     es_host = "http://elasticsearch:9200"
 
     es = Elasticsearch(hosts=es_host)
@@ -31,8 +30,6 @@ def add_es_document(song_name, artist_name, lyrics, mood):
     )
     es.close()
 
-    # TODO: Add return with information if adding document worked or not
-
 
 def get_stored_mood_of_song(song_name, artist_name):
     """Search in Elasticsearch index for the song and return the mood if already stored.
@@ -46,13 +43,11 @@ def get_stored_mood_of_song(song_name, artist_name):
 
     global index_name
 
-    # TODO: Add authentication for elasticsearch?
     es_host = "http://elasticsearch:9200"
 
     es = Elasticsearch(hosts=es_host)
 
-    # Search for song in es index
-    # TODO: Change "match" to "term"?
+    # Search for song in es index (use match instead of term query to handle typos)
     result = es.search(
         index=index_name,
         query={
@@ -68,7 +63,7 @@ def get_stored_mood_of_song(song_name, artist_name):
     # Check if a song has been found
     es.close()
     if result["hits"]["total"]["value"] > 0:
-        # TODO: How to handle multiple songs that have been found?
+        # Take most relevant result
         return result["hits"]["hits"][0]["_source"]["mood"]
     else:
         return None
@@ -84,13 +79,12 @@ def get_stored_lyrics_of_song(song_name, artist_name):
     :rtype: String or None
     """
     global index_name
-    # TODO: Add authentication for elasticsearch?
+
     es_host = "http://elasticsearch:9200"
 
     es = Elasticsearch(hosts=es_host)
 
-    # Search for song in es index
-    # TODO: Change "match" to "term"?
+    # Search for song in es index (use match instead of term query to handle typos)
     result = es.search(
         index=index_name,
         query={
@@ -105,7 +99,7 @@ def get_stored_lyrics_of_song(song_name, artist_name):
     # Check if a song has been found
     es.close()
     if result["hits"]["total"]["value"] > 0:
-        # TODO: How to handle multiple songs that have been found?
+        # Take most relevant result
         return result["hits"]["hits"][0]["_source"]["lyrics"]
     else:
         return None
