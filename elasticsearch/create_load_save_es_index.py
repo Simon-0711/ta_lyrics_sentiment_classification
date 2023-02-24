@@ -4,53 +4,15 @@ import time
 
 import pandas as pd
 
-from elasticsearch import Elasticsearch, helpers
-
-
-def create_es_index_plain():
-    """
-        create index only and dont load any additional data
-    """
-
-   # initialize elasticsearch client
-    es_host = "http://localhost:9200"
-    es = Elasticsearch(hosts=es_host)
-
-    # create empty index
-    index_name = "lyrics_mood_classification"
-    es.indices.create(
-        index=index_name,
-        mappings={
-            "dynamic": "strict",
-            "properties": {
-                "song_name": {"type": "text"},
-                "artist_name": {"type": "text"},
-                "lyrics": {"type": "text"},
-                "mood": {"type": "text"},
-            },
-        },
-    )
-
-
-def create_es_index():
-    # Todo: discuss if this moethod is jst doubling the one below (load)
+def create_es_index(path_to_csv):
+    # Todo: discuss if this moethod is jst doubling the one below (load) 
     # since the dump is most likely equal or almost equal to our initial dataset
-    """Create elasticsearch index for our lyrics mood classification using the saved ground truth data in '../data_exploration/data/song-data-labels-cleaned.csv'."""
-
-    DATA_FILE_PATH = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "data_exploration",
-            "data",
-            "song-data-labels-cleaned.csv",
-        )
-    )
-
+    """Create elasticsearch index for our lyrics mood classification using the saved ground truth data in '../data_exploration/data/song-data-labels-cleaned-seven-moods.csv'."""
     # check for the file with the ground truth mood labels
-    if not os.path.isfile(DATA_FILE_PATH):
+    
+    if not os.path.isfile(path_to_csv):
         raise Exception(
-            "'../data_exploration/data/song-data-labels-cleaned.csv' not found"
+            f"{path_to_csv} not found"
         )
 
     # initialize elasticsearch client
@@ -73,7 +35,7 @@ def create_es_index():
     )
 
     # load the document with the ground truth labels
-    ground_truth_df = pd.read_csv(DATA_FILE_PATH)
+    ground_truth_df = pd.read_csv(path_to_csv)
     ground_truth_df = ground_truth_df[["SName", "Artist", "Lyric", "Mood"]]
 
     # create documents from df rows
@@ -106,7 +68,7 @@ def create_es_index():
 
     # save elasticsearch index via elasticdump
     index_file = os.path.abspath(
-        os.path.join(DATA_FILE_PATH, "..", f"{index_name}_index.json")
+        os.path.join(path_to_csv, "..", f"{index_name}_index.json")
     )
     os.system(
         f"elasticdump --input={es_host}/{index_name} --output={index_file} --type=data"
@@ -153,31 +115,11 @@ def load_es_index(path):
     print(f"Errors: {errors}")
 
 
-def save_es_index():
-    """Save the most current elasticsearch index at '../data_exploration/data/lyrics_mood_classification.json'."""
-
-    # save elasticsearch index via elasticdump
-    es_host = "http://localhost:9200"
-    index_name = "lyrics_mood_classification"
-    INDEX_FILE_PATH = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "data_exploration",
-            "data",
-            f"{index_name}_index.json",
-        )
-    )
-    os.system(
-        f"elasticdump --input={es_host}/{index_name} --output={INDEX_FILE_PATH} --type=data"
-    )
-
-
 if __name__ == "__main__":
     from os.path import exists
 
     # check if dump exists
-    if exists("/opt/dump.json"):
-        load_es_index("/opt/dump.json")
+    if exists("/opt/elasticsearch/dump.json"):
+        load_es_index("/opt/elasticsearch/dump.json")
     else:
-        create_es_index_plain()  # create the elasticsearch index plain without data
+        create_es_index("/opt/data_exploration/data/song-data-labels-cleaned-seven-moods.csv")  # create the elasticsearch index plain without data

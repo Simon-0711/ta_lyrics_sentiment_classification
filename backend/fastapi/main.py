@@ -16,9 +16,9 @@ from configuration.config import app as app
 from fastapi import HTTPException
 from utils import processing_pipeline
 
-CNN_MODEL = "./cnn/cnn_model_v1"
-TOKENIZER = "./cnn/cnn_model_v1/tokenizer.pickle"
-LABELENCODER = "./cnn/cnn_model_v1/label_encoder.npy"
+CNN_MODEL = "./cnn/cnn_model_v2"
+TOKENIZER = "./cnn/cnn_model_v2/tokenizer.pickle"
+LABELENCODER = "./cnn/cnn_model_v2/label_encoder.npy"
 
 
 class Body(BaseModel):
@@ -63,9 +63,9 @@ async def search(body: Body) -> dict:
 
         # return 404 if song not found
         if lyrics is None:
-            raise HTTPException(
-                status_code=404, detail="Lyrics for Song not found"
-            )
+            #raise HTTPException(status_code=404, detail="Lyrics for Song not found")
+            print(f"Couldn't find a corresponding song to {song} from {artist}")
+            return {"error": 404}
 
         # Classify the mood
         # set the artist and song name to the found one,
@@ -87,20 +87,24 @@ async def search(body: Body) -> dict:
         ef.add_es_document(song, artist, lyrics.lyrics, mood)
     else:
         mood = ef.get_stored_mood_of_song(song, artist)
+        song,artist = ef.get_stored_song(song,artist)
         song_dictionary = {
             "Song": song,
             "Artist": artist,
             "Lyrics": song_lyrics.lower(),
             "Mood": mood,
         }
-
     # search similar songs
     mood = song_dictionary["Mood"]
     song_dictionary.pop("Mood", None)
 
     # get top n similar songs
     similar_songs = get_similar(song_to_compare=song_dictionary, mood=mood)
-
+    # pop the lyrics to reduce size of return value
+    song_dictionary.pop("Lyrics", None)
+    song_dictionary.pop("Vectorized_lyric", None)
+    # combine all the data for the return
+    similar_songs.update(song_dictionary)
     return similar_songs
 
 

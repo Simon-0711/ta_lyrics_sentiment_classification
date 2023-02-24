@@ -10,7 +10,9 @@ services:
     environment:
       - discovery.type=single-node
     volumes:
-      - ./elasticsearch:/opt/
+      # mount the data exploration bcs there are the intial csv files used to store the songs in an es index and create a dump afterwards
+      - ./data_exploration/:/opt/data_exploration
+      - ./elasticsearch/:/opt/elasticsearch
     ports:
       - 9200:9200
       - 9300:9300

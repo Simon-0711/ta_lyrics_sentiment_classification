@@ -141,3 +141,45 @@ def get_all_documents_of_mood(mood):
         song_same_mood_dict[f"{song}_{artist}"] = document_dict
 
     return song_same_mood_dict
+
+
+
+def get_stored_song(song_name, artist_name):
+    """Search in Elasticsearch index for the song and return the song and artist name if already stored.
+
+    :param song_name: song name of the document entry.
+    :param artist_name: artist name of the document entry.
+
+    :return: song and artist name of given song and artist if stored in Elasticsearch index. Else None.
+    :rtype: String or None
+    """
+
+    global index_name
+
+    # TODO: Add authentication for elasticsearch?
+    es_host = "http://elasticsearch:9200"
+
+    es = Elasticsearch(hosts=es_host)
+
+    # Search for song in es index
+    # TODO: Change "match" to "term"?
+    result = es.search(
+        index=index_name,
+        query={
+            "bool": {
+                "must": [
+                    {"match": {"song_name": song_name}},
+                    {"match": {"artist_name": artist_name}},
+                ]
+            }
+        },
+    )
+
+    # Check if a song has been found
+    es.close()
+    if result["hits"]["total"]["value"] > 0:
+        # TODO: How to handle multiple songs that have been found?
+        return result["hits"]["hits"][0]["_source"]["song_name"], result["hits"]["hits"][0]["_source"]["artist_name"]
+    else:
+        return None
+
