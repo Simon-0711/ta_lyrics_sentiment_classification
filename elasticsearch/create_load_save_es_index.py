@@ -1,9 +1,7 @@
-import os
 import json
+import os
 import time
 
-from elasticsearch import Elasticsearch
-from elasticsearch import helpers
 import pandas as pd
 
 def create_es_index(path_to_csv):
@@ -119,6 +117,7 @@ def load_es_index(path):
 
 if __name__ == "__main__":
     from os.path import exists
+
     # check if dump exists
     if exists("/opt/elasticsearch/dump.json"):
         load_es_index("/opt/elasticsearch/dump.json")
