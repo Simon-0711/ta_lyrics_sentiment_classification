@@ -22,6 +22,14 @@ See commit history.
 
 
 ## Project state
+
+#### Data analysis 
+##### Data Sources, Preprocessing and Basic Statistics
+For a detailed description of the data analysis performed please see *ta_lyrics_sentiment_classification/data_exploration/readme.md* as well as the jupyter notebooks found under *ta_lyrics_sentiment_classification/data_exploration/*.
+##### Experiments 
+<img src="images/no_experiments_meme.png" width="300"/>
+
+
 #### Planning state
 So far we have performed data analysis on lyrics and artist data from kaggle (see data analysis readme). Furthermore based on the labels found in the baseline paper for this project we have scraped the kaggle and last.fm dataset to see whether or not the lyrics are suitable for an ML driven sentiment classification approach. Based on the given datasets and planning state, we have two major options to choose from in order to recommend similar songs (sentiment) based on the input lyrics or song name given by the user. 
 
@@ -34,9 +42,7 @@ However we can determine similar songs based on combinations of cosine similarit
 Furthermore it is possible to think of additionally labeling each songs sentiment based on new keywords we defined that were found often in the kaggle dataset.
 
 
-
 #### Future planning 
-
 As you can see in our data analysis, we found that ~ 93,4 % of the songs in the kaggle dataset are contained in the last.fm dataset. Furthermore, we can assign moods based on the labels found in the last.fm dataset for ~ 15,02 % of all songs. After first adjustments, the ratio can be even expanded to 24,58 % by modifying the keywords for the moods. 
 This may not seem like much, however, since our overall database consists of 200.00 songs, this presents us a solid base of training data. Hence we will chose option 1 (see pervious section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. For the complete analysis on the distributions, please refer to our data analysis.
 
@@ -55,10 +61,8 @@ Preprocessing for recommendation based on cosine similarity after sentiment clas
 Other preprocessing steps are possible if required.
 
 
-
 #### Final implementation
 option 2 simon --> alles von future planning simon umgesetzt mit chorus normalisierung beschreiben --> Cnn infos max --> elastic search index infos pascal --> Frontend beispiel screenshot simon. 
-
 
 
 #### High-level architecture description
@@ -89,13 +93,6 @@ If a user queries for a song that is not in the database yet, the backend will a
 **Preprocessing pipeline:** See section future planning above. 
 
 
-
-## Data analysis 
-#### Data Sources, Preprocessing and Basic Statistics
-For a detailed description of the data analysis performed please see *ta_lyrics_sentiment_classification/data_exploration/readme.md* as well as the jupyter notebooks found under *ta_lyrics_sentiment_classification/data_exploration/*.
-
-#### Experiments 
-<img src="images/no_experiments_meme.png" width="300"/>
 
 ## Start guide
 Clone the repository and run from the root of it:
