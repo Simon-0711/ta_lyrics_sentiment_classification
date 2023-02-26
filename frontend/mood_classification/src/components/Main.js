@@ -13,6 +13,7 @@ export default function Main() {
     const [returned_artist, setReturnedArtist] = useState(null);
     // error variable to catch the error if no song was found
     const [songNotFound, setsongNotFound] = useState(null);
+    const [searchState, setSearchState] = useState(false);
 
     // Functions to get song and artist name
     function getSongName(input_box_input) {
@@ -43,6 +44,10 @@ export default function Main() {
         setMood(null)
         setSimilarSongs(null)
         setsongNotFound(null)
+        // Display "searching..." in frontend
+        setSearchState(true)
+        console.log("hi")
+        console.log(searchState)
         if ((song_name) && (artist_name)) {
             // Don't display error message
             setWrongInputIsShown(false)
@@ -65,6 +70,7 @@ export default function Main() {
                     setSimilarSongs(res.similar_songs)
                     setsongNotFound(false)
                 }
+                setSearchState(false)
             })
             console.log("Request finished...")
         } else {
@@ -75,6 +81,7 @@ export default function Main() {
             setMood(null)
             setSimilarSongs(null)
             setsongNotFound(null)
+            setSearchState(false)
         }
     }
 
@@ -88,6 +95,7 @@ export default function Main() {
                 <input type="text" name="inputArtist" id="inputArtist" required spellCheck="false" placeholder='Artist Name' onChange={getArtistName}></input>
             </div>
             <button id='searchSimilarLyricsButton' name="searchLyrics" onClick={() => sendToFastApi(song_name, artist_name)}>Find Similar Songs</button>
+            {searchState && <p id="output_songs">Searching...</p>}
             {wrongInputIsShown && <p id="errorMissingInput">Please fill out both song and artist name</p>}
             {songNotFound && <p id="errorMissingInput">No result for this song and artist combination. Check the input for typos or try another one!</p>}
             {!songNotFound && mood != null && similar_songs != null && returned_artist != null && returned_song != null && !wrongInputIsShown && <p id="output_songs">Similar songs for '{returned_song}' from '{returned_artist}' with a '{mood}' mood: </p>}

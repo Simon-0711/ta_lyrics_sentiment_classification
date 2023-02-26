@@ -73,7 +73,7 @@ div.searchInput {
 #errorMissingInput {
     display: block;
     text-align: center;
-    margin-top: 5rem;
+    margin-top: 8rem;
     font-family: 'Inconsolata', serif;
     font-weight: 400;
     font-size: 1.3em;
