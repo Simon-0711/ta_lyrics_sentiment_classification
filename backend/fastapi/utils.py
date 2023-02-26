@@ -31,6 +31,7 @@ def chorus_normalization(original_lyrics: str) -> str:
     lyrics = re.sub("\nchorus", "", lyrics)
     lyrics = re.sub("pre[-]?chorus", "", lyrics)
     lyrics = re.sub("\nrepeat chorus\n", "", lyrics)
+
     return lyrics
 
 
@@ -41,7 +42,6 @@ def processing_pipeline(song_data: dict) -> dict:
     - Stop word removal
     - Punctuation removal
     - Lemmatization
-    - ...
 
     :param song_data: song data saved in a json file containing song name,
         artist name and lyrics

@@ -7,10 +7,14 @@ from elasticsearch import Elasticsearch
 import pandas as pd
 
 def create_es_index(path_to_csv):
-    # since the dump is most likely equal or almost equal to our initial dataset
-    """Create elasticsearch index for our lyrics mood classification using the saved ground truth data in '../data_exploration/data/song-data-labels-cleaned-seven-moods.csv'."""
-    # check for the file with the ground truth mood labels
-    
+    """
+    Create elasticsearch index for our lyrics mood classification using the saved ground truth data in '../data_exploration/data/song-data-labels-cleaned-seven-moods.csv'.
+
+    :param path_to_csv: path to csv file containing the initial data that will be loaded into the es index that is created.
+    :type path_to_csv: str
+    """
+
+    # check for the file with the ground truth mood labels    
     if not os.path.isfile(path_to_csv):
         raise Exception(
             f"{path_to_csv} not found"
@@ -77,7 +81,12 @@ def create_es_index(path_to_csv):
 
 
 def load_es_index(path):
-    """Load the most current elasticsearch index from the '../data_exploration/data/lyrics_mood_classification.json' file."""
+    """
+    Load the most current elasticsearch index from the '../data_exploration/data/lyrics_mood_classification.json' file. Similar to the create_es_index function but with better performance (will be used after dump.json is once created in initial startup).
+    
+    :param path: path to dump file containing the data that will be loaded into the es index.
+    :type path: str
+    """
 
     index_name = "lyrics_mood_classification"
     INDEX_FILE_PATH = path
@@ -104,7 +113,7 @@ def load_es_index(path):
         },
     )
 
-    # load last state from index via the json file
+    # load last state from index via the json dump file
     new_documents = []
     with open(INDEX_FILE_PATH, "r") as json_file:
         # load the documents from the json file
@@ -123,4 +132,5 @@ if __name__ == "__main__":
     if exists("/opt/elasticsearch/dump.json"):
         load_es_index("/opt/elasticsearch/dump.json")
     else:
-        create_es_index("/opt/data_exploration/data/song-data-labels-cleaned-seven-moods.csv")  # create the elasticsearch index plain without data
+        # if not, use the csv file containing the initial preprocessed kaggle data when creating elasticsearch index
+        create_es_index("/opt/data_exploration/data/song-data-labels-cleaned-seven-moods.csv")
