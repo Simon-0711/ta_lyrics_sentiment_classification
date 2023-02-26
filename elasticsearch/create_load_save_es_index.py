@@ -2,6 +2,7 @@ import json
 import os
 import time
 
+from elasticsearch import helpers
 from elasticsearch import Elasticsearch
 import pandas as pd
 
