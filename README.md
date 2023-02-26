@@ -14,8 +14,9 @@ In this project we will use the Github project https://github.com/workmanjack/ly
 #### Utilized libraries
 The utilized libraries can be found in our requirements.txt file in the root of our Github project. In general, the code of our project can be started by simply using the command ``` docker-compose up ```, which installs, builds and starts all necessary services and libraries. Only docker (preferably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your system.
 
-Todo: wait-for-it.sh
-
+### wait-for-it.sh
+The wait-for-it.sh script used for the elasticsearch component was taken from https://github.com/vishnubob/wait-for-it. 
+It is used to check if the elasticsearch node is already started, and if so, execute further steps to create the neccessary indicies or fill es with dummy data.
 
 #### Contributions
 See commit history. 
@@ -96,17 +97,20 @@ If a user queries for a song that is not in the database yet, the backend will a
 
 
 ## Start guide
-Clone the repository and run from the root of it:
-``` docker-compose up ```
-This will start up the docker containers specified in the docker-compose file.
-After that you should be able to see them with ``` docker ps ```. 
-If you want to connect to them use ``` docker exec -it <container_name or ID> /bin/sh ```
-
-You can then start or stop these services at anytime by typing
-```
-docker-compose start 
-docker-compose stop
-```
+The following steps need to be executed in order to get the project up and running:
+1. clone the repository
+2. navigate in a wsl shell to the root of it
+3. execute ``` docker-compose up ```
+   1. Wait for the building steps to finish (This might take several minutes until all packages are installed)
+      1. If there appears to be an error during build time of the images, simply run again the command ``` docker-compose up ```
+   2. When the container are setting up wait for ~1 minute for every service to be available (elasticsearch might take a short time)
+4. Navigate in your browser to http://localhost:3000
+   1. The application is neither designed nor adapted to specific browsers. We tested succesfully with google chrome and recommend it for the testing. Usage of other browsers might lead to misbehaviour or unpredicted behaviour
+5. Use the application
+   
+## Debugging
+If you want to connect to a specific container after you ahve run the above mentioned docker command, execute the follwoing command in a new terminal:
+``` docker exec -it <container_name or ID> /bin/sh ```
 
 The startup may take a while. When the appearing log messages in the terminal are stalling, the app should be ready to use.
 - Kibana is accessed by http://localhost:5601
