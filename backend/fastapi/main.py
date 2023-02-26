@@ -63,7 +63,6 @@ async def search(body: Body) -> dict:
 
         # return 404 if song not found
         if lyrics is None:
-            #raise HTTPException(status_code=404, detail="Lyrics for Song not found")
             print(f"Couldn't find a corresponding song to {song} from {artist}")
             return {"error": 404}
 
