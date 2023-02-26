@@ -56,6 +56,11 @@ Other preprocessing steps are possible if required.
 
 
 
+#### Final implementation
+option 2 simon --> alles von future planning simon umgesetzt mit chorus normalisierung beschreiben --> Cnn infos max --> elastic search index infos pascal --> Frontend beispiel screenshot simon. 
+
+
+
 #### High-level architecture description
 In the following picture, you can see the high level architecture of the project in regard to the technology stack that will be used. 
 
