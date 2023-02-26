@@ -128,7 +128,7 @@ When you update the dockerfiles or let's say the npm dependencies (basically any
 
 ## Coding guidelines
 #### Code formatting 
-For code formatting we will use Black: https://github.com/psf/black. 
+For code formatting we will use PEP8: https://peps.python.org/pep-0008/. 
 
 #### Docstring format
 Function and class descriptions will follow the Sphinx guideline as shown here: https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html.
