@@ -90,6 +90,7 @@ The following image displays the use case in which a song was not found in Elast
 <img src="images/architecture_uc_2.png" width="600"/>
 If a user queries for a song that is not in the database yet, the backend will access the Genius API and search for the song. If it can be found, it will scrape for the lyrics. After that, the lyrics need to be preprocessed in a preprocessing pipeline, which will be presented in more depth in the following section. After the preprocessing, the song can be analyzed then using the CNN of the baseline project. After that the result will be stored in Elasticsearch.
 
+
 **Preprocessing pipeline:** See section future planning above. 
 
 
