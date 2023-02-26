@@ -12,7 +12,7 @@ COPY ./elasticsearch/startup.sh /tmp/startup.sh
 RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash - &&  apt update -y && apt install -y nodejs
 RUN npm install elasticdump --global --save
 
-# use this script later to ensure elastic search is running 
+# use this script later to ensure elasticsearch is running 
 RUN chmod 777 /tmp/startup.sh
 RUN chown elasticsearch:elasticsearch /tmp/startup.sh
 

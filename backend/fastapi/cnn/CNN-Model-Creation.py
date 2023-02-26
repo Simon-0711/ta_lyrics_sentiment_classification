@@ -17,7 +17,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import to_categorical
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.layers import Dense, Embedding, GlobalMaxPooling1D
+from tensorflow.keras.layers import Dense, Embedding
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from utils import *
@@ -73,9 +73,8 @@ lyrics = []
 for i in df['Lyric']:
     lyrics.append(i.split())
 
-# train the word2vec model
-# vector size according to #
-# https://moj-analytical-services.github.io/NLP-guidance/NNmodels.html#:~:text=The%20standard%20Word2Vec%20pre%2Dtrained,fewer%20dimensions%20to%20represent%20them.
+# train the word2vec model (vector size according to:
+# https://moj-analytical-services.github.io/NLP-guidance/NNmodels.html#:~:text=The%20standard%20Word2Vec%20pre%2Dtrained,fewer%20dimensions%20to%20represent%20them)
 # mincount = 2 to prevent misspellings
 word2vec_model = Word2Vec(lyrics, vector_size=150,
                           window=5, min_count=2, workers=16)

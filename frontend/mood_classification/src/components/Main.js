@@ -46,7 +46,6 @@ export default function Main() {
         setsongNotFound(null)
         // Display "searching..." in frontend
         setSearchState(true)
-        console.log("hi")
         console.log(searchState)
         if ((song_name) && (artist_name)) {
             // Don't display error message

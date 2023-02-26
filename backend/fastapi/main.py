@@ -9,11 +9,11 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from fastapi import HTTPException
 
-import source.elasticsearch_functions as ef
+import elasticsearch_functions as ef
 import utils as utils
 from configuration.config import app as app
-from fastapi import HTTPException
 from utils import processing_pipeline
 
 CNN_MODEL = "./cnn/cnn_model_v2"
@@ -194,7 +194,9 @@ def get_tf_idf_vectorized_lyrics(
 
     :param song_to_compare: dict with song name, artist name and lyrics
         for song to compare with.
+    :type song_to_compare: dict
     :param mood: mood of the song to compare with.
+    :type mood: str
 
     :return: dict for the song we want to compare each lyrics of certain
         mood with. It contains information on the song name, artist name,
