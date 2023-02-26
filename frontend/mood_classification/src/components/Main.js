@@ -36,6 +36,13 @@ export default function Main() {
 
     // Function to send song and artist name to fast api
     function sendToFastApi(song_name, artist_name) {
+        // Set variables to null to not produce output before new search
+        setWrongInputIsShown(false)
+        setReturnedSong(null)
+        setReturnedArtist(null)
+        setMood(null)
+        setSimilarSongs(null)
+        setsongNotFound(null)
         if ((song_name) && (artist_name)) {
             // Don't display error message
             setWrongInputIsShown(false)
@@ -48,10 +55,10 @@ export default function Main() {
             )
             console.log(response)
             response.then(res => {
-                if(res.error === 404) {
+                if (res.error === 404) {
                     setsongNotFound(true)
                 }
-                else{
+                else {
                     setReturnedSong(res.Song)
                     setReturnedArtist(res.Artist)
                     setMood(res.mood)
@@ -64,6 +71,7 @@ export default function Main() {
             // Display error message
             setWrongInputIsShown(true)
             setReturnedSong(null)
+            setReturnedArtist(null)
             setMood(null)
             setSimilarSongs(null)
             setsongNotFound(null)
@@ -88,7 +96,7 @@ export default function Main() {
                     <p>Song: {similar_songs[key].Song}, Artist: {similar_songs[key].Artist}, Similarity: {similar_songs[key].Similarity} %</p>
                 );
             })}</p>}
-            
+
         </div >
     )
 }
