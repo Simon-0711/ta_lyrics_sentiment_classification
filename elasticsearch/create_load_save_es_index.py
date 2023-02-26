@@ -2,6 +2,7 @@ import json
 import os
 import time
 
+from elasticsearch import Elasticsearch
 import pandas as pd
 
 def create_es_index(path_to_csv):
