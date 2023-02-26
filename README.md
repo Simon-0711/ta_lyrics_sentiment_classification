@@ -74,8 +74,13 @@ Besides specific words like chorus that are not part of the actual lyrics, some 
 These kind of information has been mostly placed in special parentheses like [], <>, (), {}. 
 To remove this, we were using regular expressions and filtered all text sequences inside parantheses (including the parantheses). 
 <img src="images/chorus_text_cleansing_example.png" width="1000"/>
+The data cleansing and filtering of the kaggle dataset has been performed in the Jupyter notebook "kaggle_data_preprocessing.ipynb", which saves all the cleansed data in a .csv file. 
 
-To store the data, we are using Elasticsearch. We created our own Elasticsearch index "lyrics_mood_classification" that saves information on the song name, artist name, lyrics and mood/sentiment for each song from the Kaggle dataset.
+To store the data, we are using Elasticsearch. 
+We created our own Elasticsearch index "lyrics_mood_classification" that saves information on the song name, artist name, lyrics and mood/sentiment for each song from the Kaggle dataset.
+To initialize the Elasticsearch index, we are firstly using the .csv file created in the "kaggle_data_preprocessing.ipynb".
+During this first index creation process, we are saving the index in an Elasticsearch dump file containing all information from the Elasticsearch index.
+For later initializations of the index, e.g., when the Docker container has been removed, the Elasticsearch dump file will be used, providing a faster start up.
 
 <TODO: Text on choice of moods/sentiments and how we balanced the data (Max)>
 
