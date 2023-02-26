@@ -156,13 +156,11 @@ def get_stored_song(song_name, artist_name):
 
     global index_name
 
-    # TODO: Add authentication for elasticsearch?
     es_host = "http://elasticsearch:9200"
 
     es = Elasticsearch(hosts=es_host)
 
-    # Search for song in es index
-    # TODO: Change "match" to "term"?
+    # Search for song in es index (use match instead of term query to handle typos)
     result = es.search(
         index=index_name,
         query={
@@ -178,7 +176,7 @@ def get_stored_song(song_name, artist_name):
     # Check if a song has been found
     es.close()
     if result["hits"]["total"]["value"] > 0:
-        # TODO: How to handle multiple songs that have been found?
+        # Take most relevant result
         return result["hits"]["hits"][0]["_source"]["song_name"], result["hits"]["hits"][0]["_source"]["artist_name"]
     else:
         return None
