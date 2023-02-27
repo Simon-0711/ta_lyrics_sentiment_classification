@@ -1,6 +1,5 @@
 FROM node:lts-alpine3.16
 
 RUN npm install -g npm
-COPY ./frontend/mood_classification/package.json /tmp/package.json
-COPY ./frontend/mood_classification/package-lock.json /tmp/package-lock.json
-RUN cd /tmp && npm install --global
+COPY ./frontend/mood_classification/ /opt/mood_classification
+RUN cd /opt/mood_classification && npm install 

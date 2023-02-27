@@ -47,10 +47,10 @@ services:
     container_name: react
     networks:
       - fullstack
-    volumes:
-      - type: bind
-        source: ./frontend/mood_classification
-        target: /opt/mood_classification
+    #volumes:
+    #  - type: bind
+    #    source: ./frontend/mood_classification
+    #    target: /opt/mood_classification
     ports:
       - 3000:3000
     command: sh -c "cd /opt/mood_classification && npm start"
