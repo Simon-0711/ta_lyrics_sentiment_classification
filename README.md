@@ -72,7 +72,7 @@ Hence, we started to remove non-english songs and took only songs that have more
 Furthermore, we were removing certain character sequences from the lyrics, such as anything related to the word chorus indicating that there the chorus defined at the beginning of the song is sung.
 Besides specific words like chorus that are not part of the actual lyrics, some lyrics also contain information about the artist that is singing a specific part of the song. 
 These kind of information has been mostly placed in special parentheses like [], <>, (), {}. 
-To remove this, we were using regular expressions and filtered all text sequences inside parantheses (including the parantheses). 
+To remove this, we were using regular expressions and filtered all text sequences inside parentheses (including the parentheses). 
 <img src="images/chorus_text_cleansing_example.png" width="1000"/>
 The data cleansing and filtering of the kaggle dataset has been performed in the Jupyter notebook "kaggle_data_preprocessing.ipynb", which saves all the cleansed data in a .csv file. 
 
@@ -82,11 +82,57 @@ To initialize the Elasticsearch index, we are firstly using the .csv file create
 During this first index creation process, we are saving the index in an Elasticsearch dump file containing all information from the Elasticsearch index.
 For later initializations of the index, e.g., when the Docker container has been removed, the Elasticsearch dump file will be used, providing a faster start up.
 
-<TODO: Text on choice of moods/sentiments and how we balanced the data (Max)>
+##### Balncing and normalizing the sentiments
+As described above we had a vast amount of songs that could be classified. However, the moods we could derive from our gold labels from last.fm were quite unbalanced as depicted below:
+<img src="images/overall_distribution.png" width="600"/>
+
+Hence we decided to reduce the number of different moods and combine the sentiments where possible. Two approaches were thereby considered: The first one aligns with an approach of our baseline project which faced a similar issue. To solve this they split the moods only in 4 categories: happy, sad, calm and anger by combining some of the other moods with them and disregarding the once that didn't seem to fit in. We did the same but used more moods than the original paper, by only omitting the moods "desire, romantic, confident, dreamy" instead of "dreamy, desire, earnest, pessimism, romantic, brooding". The moods were reassigned based on the following schema: 
+
+happy = cheerful, happy, excitement, upbeat
+sad = grief, sad, pessimism, angst, depressed
+calm = calm, brooding, earnest
+anger = anger, aggression
+
+The resulting distribution is as follows: 
+
+<img src="images/4_moods_distribution.png" width="600"/>
+
+The second approach was to combine less moods so that we had more sentiments to classify to. We've done this because otherwise it might not be as useful for a user to simply know if his song is happy or sad. So we thought by using more sentiments we could achieve a better user experience. For this approach we combined the following moods:
+
+enthusiastic = excitement, upbeat, cheerful
+happy = happy
+sad = grief, sad 
+depressed = pessimism, angst, depressed
+romantic = romantic, desire
+calm = calm, brooding, earnest
+anger = anger, aggression
+
+As a result we only omitted dreamy as a mood, which was not present in our dataset in the first place.
+The distribution for this approach is depicted below:
+
+<img src="images/7_moods_distribution.png" width="600"/>
+
+Both approaches were unbalanced, meaning that some moods were over represented and other underrepresented. Hence, we normalized the amount of songs for each sentiment to the amount of songs available for the sentiment with the least songs, resulting in the following distribution:
+
+<img src="images/4_7_moods_distribution_evenly.png" width="600"/>
+
+This reduced the amount of songs we could train on, but it also ensured that we wouldn't overfit to a specific mood. As a comparison we trained our model on the two normalized approaches, as well as on the unbalanced and un normalized dataset.
+
+
+#### CNN creation 
+As mentioned above the CNN was trained on the three different datasets  (unbalanced dataset, four mood dataset and seven mood dataset). Since it was out of scope to create a CNN completely on our own and trying to optimize it, we took an approach from [kaggle](https://www.kaggle.com/code/jagannathrk/word2vec-cnn-text-classification) to speed things up. This gave us some formal preprocessing steps as well as a sample CNN which we then trained on our test sets also with some hyperparameter optimization. The following table depicts the results of the best performing hyperparameter combination for each dataset (The optimization can be seen in the notebook data_exploration/CNN-Model-Creation.ipynb):
+
+| Dataset             | Model Accuracy (%) | Random Prediction (%) | Improvement to Random (Accuracy/Random Prediction) |
+|---------------------|-------------------|-----------------------|-----------------------------------------------------|
+| unbalanced dataset  | 30.96             | 5.88                  | 5.265                                               |
+| 4 moods balanced    | 34.72             | 25                    | 1.388                                               |
+| 7 moods balanced    | 23.58             | 14.29                 | 1.65                                                |
+
+
+As one can see, the balanced four moods approach did perform best, followed by the unbalanced one and at last the balanced one with seven moods. This is to be expected, since the chance of a random prediction being correct for four moods is quite high as opposed to the other approaches. Taken into account the random chance, the unbalanced approach did perform best which is also expected since it has most likely overfitted to the mood "sad" which was represented way more often than any other mood. The at first glance weakest approach of the seven moods hence works best when taking the random chance into account and the fact that the first model is not viable.
+
 
 <TODO: Text on preprocessing pipeline, i.e., tokenization, stopword removal, ... (Simon/Max)>
-
-<TODO: Text on CNN model (Max)>
 
 When one enters a song that is not in the Elasticsearch index yet, we are applying the CNN and then adding the song to our Elasticsearch index with the classified mood.
 
