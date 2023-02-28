@@ -16,9 +16,9 @@ import utils as utils
 from configuration.config import app as app
 from utils import processing_pipeline
 
-CNN_MODEL = "./cnn/cnn_model_v2"
-TOKENIZER = "./cnn/cnn_model_v2/tokenizer.pickle"
-LABELENCODER = "./cnn/cnn_model_v2/label_encoder.npy"
+CNN_MODEL = "./cnn/cnn_model_v3"
+TOKENIZER = "./cnn/cnn_model_v3/tokenizer.pickle"
+LABELENCODER = "./cnn/cnn_model_v3/label_encoder.npy"
 
 
 class Body(BaseModel):

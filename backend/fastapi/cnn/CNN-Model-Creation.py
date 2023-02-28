@@ -20,10 +20,10 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Dense, Embedding
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from utils import *
 
 # Add parent dir to system path
 sys.path.append('../')
+from utils import *
 
 
 def processing_pipeline(song_data: pd.DataFrame) -> pd.DataFrame:
@@ -64,7 +64,7 @@ def processing_pipeline(song_data: pd.DataFrame) -> pd.DataFrame:
 
 # read in the data of our dataset which has been extended
 # with the lastfm labels
-df = pd.read_csv('../../../data_exploration/data/song-data-labels-cleaned.csv')
+df = pd.read_csv('../../../data_exploration/data/song-data-labels-cleaned-seven-moods.csv')
 # process data with pipeline
 df = processing_pipeline(df)
 
@@ -146,16 +146,16 @@ def gensim_to_keras_embedding(model, train_embeddings: bool = False):
 keras_model = Sequential()
 keras_model.add(gensim_to_keras_embedding(word2vec_model, False))
 keras_model.add(Dropout(0.2))
+keras_model.add(Conv1D(50, 5, activation='relu', padding='same', strides=1))
+keras_model.add(Conv1D(50, 5, activation='relu', padding='same', strides=1))
+keras_model.add(MaxPool1D())
+keras_model.add(Dropout(0.2))
 keras_model.add(Conv1D(100, 5, activation='relu', padding='same', strides=1))
 keras_model.add(Conv1D(100, 5, activation='relu', padding='same', strides=1))
 keras_model.add(MaxPool1D())
 keras_model.add(Dropout(0.2))
 keras_model.add(Conv1D(200, 5, activation='relu', padding='same', strides=1))
 keras_model.add(Conv1D(200, 5, activation='relu', padding='same', strides=1))
-keras_model.add(MaxPool1D())
-keras_model.add(Dropout(0.2))
-keras_model.add(Conv1D(400, 5, activation='relu', padding='same', strides=1))
-keras_model.add(Conv1D(400, 5, activation='relu', padding='same', strides=1))
 keras_model.add(GlobalMaxPool1D())
 keras_model.add(Dropout(0.2))
 keras_model.add(Dense(200))
