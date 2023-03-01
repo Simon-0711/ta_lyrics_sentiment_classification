@@ -82,7 +82,7 @@ To initialize the Elasticsearch index, we are firstly using the .csv file create
 During this first index creation process, we are saving the index in an Elasticsearch dump file containing all information from the Elasticsearch index.
 For later initializations of the index, e.g., when the Docker container has been removed, the Elasticsearch dump file will be used, providing a faster start up.
 
-##### Balncing and normalizing the sentiments
+##### Balancing and normalizing the sentiments
 As described above we had a vast amount of songs that could be classified. However, the moods we could derive from our gold labels from last.fm were quite unbalanced as depicted below:
 <img src="images/overall_distribution.png" width="600"/>
 
