@@ -187,7 +187,14 @@ The following image displays the use case in which a song was not found in Elast
 If a user queries for a song that is not in the database yet, the backend will access the Genius API and search for the song. If it can be found, it will scrape for the lyrics. After that, the lyrics need to be preprocessed in a preprocessing pipeline, which will be presented in more depth in the following section. After the preprocessing, the song can be analyzed then using the CNN of the baseline project. After that the result will be stored in Elasticsearch.
 
 
-**Preprocessing pipeline:** See section future planning above. 
+##### Frontend Implementation 
+The frontend allows the user to pass a song as well as an artist name to the fields "Song Name" and "Aritst Name" respectively. 
+When clicking the button "Find Similar Songs" the mood of the song is classified and similar songs are searched for.
+After that, the top 3 most similar songs are presented.  
+Example: 
+
+If the input is not correct (e.g. missing artist name) a error message will be presented. 
+Example
 
 
 
