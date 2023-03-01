@@ -63,10 +63,14 @@ Other preprocessing steps are possible if required.
 
 
 #### Final implementation
-<TODO: option 1 simon --> alles von future planning simon umgesetzt mit chorus normalisierung beschreiben --> Cnn infos max --> elastic search index infos pascal --> Frontend beispiel screenshot simon. >
+<TODO: 
+--> Cnn infos max 
+--> Frontend beispiel screenshot simon. 
 
 As most of the songs of the used Kaggle dataset can be found in last.fm and therefore in total around 29k songs could be assigned to a sentiment, we decided for option 1.
 
+
+##### Data Cleaning 
 Before we actually used this data, we needed to apply certain steps for filtering and cleansing the data from abnormalities (e.g., lyrics that only contain the word "instrumental"), as seen in the data exploration chapter.
 Hence, we started to remove non-english songs and took only songs that have more than 70 but less than 1000 words.
 Furthermore, we were removing certain character sequences from the lyrics, such as anything related to the word chorus indicating that there the chorus defined at the beginning of the song is sung.
@@ -74,13 +78,29 @@ Besides specific words like chorus that are not part of the actual lyrics, some 
 These kind of information has been mostly placed in special parentheses like [], <>, (), {}. 
 To remove this, we were using regular expressions and filtered all text sequences inside parentheses (including the parentheses). 
 <img src="images/chorus_text_cleansing_example.png" width="1000"/>
-The data cleansing and filtering of the kaggle dataset has been performed in the Jupyter notebook "kaggle_data_preprocessing.ipynb", which saves all the cleansed data in a .csv file. 
+The data cleaning and filtering of the kaggle dataset has been performed in the Jupyter notebook "kaggle_data_preprocessing.ipynb", which saves all the cleaned data in a .csv file. 
 
+
+##### Data Storage
 To store the data, we are using Elasticsearch. 
 We created our own Elasticsearch index "lyrics_mood_classification" that saves information on the song name, artist name, lyrics and mood/sentiment for each song from the Kaggle dataset.
 To initialize the Elasticsearch index, we are firstly using the .csv file created in the "kaggle_data_preprocessing.ipynb".
 During this first index creation process, we are saving the index in an Elasticsearch dump file containing all information from the Elasticsearch index.
 For later initializations of the index, e.g., when the Docker container has been removed, the Elasticsearch dump file will be used, providing a faster start up.
+
+
+##### Data Preprocessing 
+After cleaning the data we need to further prepare the data for the CNN model. 
+The folowing steps were performed using the spacy (https://spacy.io/) python library. Spacy allows us to easily perform the folloing steps using predefined english tokenizers, stop words, punctutation and lemmatization. 
+- Tokenization
+- Stop word removal (English language)
+- Punctuation removal
+- Lemmatization
+
+The previous preprocessing steps are all performed on the lyrics of a new song that needs to be classified by the CNN model. 
+
+After receiving a mood for a given song, similar songs are searched for using the Term Frequency Inverse Document Frequency (TF-IDF) method. All songs that contain the same mood are processed. After converting all songs with the same mood cosine similarity is used to find the top 3 matching song lyrics. 
+
 
 ##### Balancing and normalizing the sentiments
 As described above we had a vast amount of songs that could be classified. However, the moods we could derive from our gold labels from last.fm were quite unbalanced as depicted below:
