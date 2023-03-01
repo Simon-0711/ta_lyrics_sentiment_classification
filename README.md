@@ -192,9 +192,12 @@ The frontend allows the user to pass a song as well as an artist name to the fie
 When clicking the button "Find Similar Songs" the mood of the song is classified and similar songs are searched for.
 After that, the top 3 most similar songs are presented.  
 Example: 
+<img src="images/frontend_classification_example.png" width="600"/>
+
 
 If the input is not correct (e.g. missing artist name) a error message will be presented. 
-Example
+Example:
+<img src="images/frontend_error_message_example.png" width="600"/>
 
 
 
