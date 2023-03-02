@@ -140,7 +140,8 @@ This reduced the amount of songs we could train on, but it also ensured that we 
 
 
 #### CNN creation 
-As mentioned above the CNN was trained on the three different datasets  (unbalanced dataset, four mood dataset and seven mood dataset). Since it was out of scope to create a CNN completely on our own and trying to optimize it, we took an approach from [kaggle](https://www.kaggle.com/code/jagannathrk/word2vec-cnn-text-classification) to speed things up. This gave us some formal preprocessing steps as well as a sample CNN which we then trained on our test sets also with some hyperparameter optimization. The following table depicts the results of the best performing hyperparameter combination for each dataset (The optimization can be seen in the notebook data_exploration/CNN-Model-Creation.ipynb):
+As mentioned above the CNN was trained on the three different datasets  (unbalanced dataset, four mood dataset and seven mood dataset). Since it was out of scope to create a CNN completely on our own and trying to optimize it, we took an approach from [kaggle](https://www.kaggle.com/code/jagannathrk/word2vec-cnn-text-classification) to speed things up. This gave us some formal processing steps as well as a sample CNN which we then trained on our test sets also with some hyperparameter optimization. Before putting the training data into the model, we preprocessed the song lyrics in order to achieve better results. The preprocessing pipeline is described in the above section "Data Preprocessing".
+The following table depicts the results of the best performing hyperparameter combination for each dataset (The optimization can be seen in the notebook data_exploration/CNN-Model-Creation.ipynb):
 
 | Dataset             | Model Accuracy (%) | Random Prediction (%) | Improvement to Random (Accuracy/Random Prediction) |
 |---------------------|-------------------|-----------------------|-----------------------------------------------------|
