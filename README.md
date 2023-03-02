@@ -203,6 +203,9 @@ Example:
 
 
 ## Start guide
+**Disclaimer: Since we did not create new image versions every time and did not host them anywhere, each initial start from scratch is a building from source. Please take note that this process might take some time depending on your network connection as it involves donwloading the images updating the registries and installing neccessary packages.**
+
+
 The following steps need to be executed in order to get the project up and running:
 1. clone the repository
 2. navigate in a wsl shell to the root of it
