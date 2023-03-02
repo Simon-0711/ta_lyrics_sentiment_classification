@@ -193,13 +193,13 @@ When clicking the button "Find Similar Songs" the mood of the song is classified
 After that, the top 3 most similar songs are presented.  
 Example: 
 
-<img src="images/frontend_classification_example.png" width="1600"/>
+<img src="images/frontend_classification_example.png" width="1000"/>
 
 
 If the input is not correct (e.g. missing artist name) a error message will be presented. 
 Example:
 
-<img src="images/frontend_error_message_example.png" width="1600"/>
+<img src="images/frontend_error_message_example.png" width="2200"/>
 
 
 
