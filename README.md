@@ -65,7 +65,6 @@ Other preprocessing steps are possible if required.
 #### Final implementation
 <TODO: 
 --> Cnn infos max 
---> Frontend beispiel screenshot simon. 
 
 As most of the songs of the used Kaggle dataset can be found in last.fm and therefore in total around 29k songs could be assigned to a sentiment, we decided for option 1.
 
