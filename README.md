@@ -203,7 +203,7 @@ Example:
 
 
 ## Start guide
-**Disclaimer: Since we did not create new image versions every time and did not host them anywhere, each initial start from scratch is a building from source. Please take note that this process might take some time depending on your network connection as it involves donwloading the images updating the registries and installing neccessary packages.**
+**Disclaimer: Since we did not create new image versions every time and did not host them anywhere, each initial start from scratch is a building from source. Please take note that this process might take some time depending on your network connection as it involves donwloading the images updating the registries and installing neccessary packages. Also make sure your system ahs sufficent memory to run elasticsearch, as this might otherwise cause troubles in the startup process**
 
 
 The following steps need to be executed in order to get the project up and running:
