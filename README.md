@@ -12,40 +12,61 @@ A Song Recommendation System using Lyrics Sentiment Classification
 In this project we will use the Github project https://github.com/workmanjack/lyric-mood-classification as our starting point. We will utilize the developed CNN for mood classification based on lyrics in this project and apply it to our dataset (https://www.kaggle.com/datasets/neisse/scrapped-lyrics-from-6-genres?select=lyrics-data.csv). The data of the dataset needs to be downloaded from heibox (https://heibox.uni-heidelberg.de/d/e7f92e149b804a82be8b/) and the <em>data</em> folder containing the .csv files needs to be placed in the <em> ta_lyrics_sentiment_classification/data_exploration/ </em> folder.
 
 #### Utilized libraries
-The utilized libraries can be found in our requirements.txt file in the backend directory of our Github project. In general, the code of our project can be started by simply using the command ``` docker-compose up ```, which installs, builds and starts all necessary services and libraries. Only docker (preferably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your system.
+The utilized libraries can be found in our requirements.txt file in the backend directory of our Github project. In general, the code of our project can be started by simply using the command ``` docker-compose up ```, which installs, builds and starts all necessary services and libraries. Only docker (preferably on Linux or WSL2) is a prerequisite. Please note that it may take up to ~5 minutes to start the application properly, based on your system.
 
 ### wait-for-it.sh
 The wait-for-it.sh script used for the elasticsearch component was taken from https://github.com/vishnubob/wait-for-it. 
-It is used to check if the elasticsearch node is already started, and if so, execute further steps to create the neccessary indicies or fill es with dummy data.
+It is used to check if the elasticsearch node is already started, and if so, execute further steps to create the neccessary indicators or fill them with dummy data.
 
 #### Contributions
-See commit history. 
+See commit history for further information.
+
+##### Simon Pavicic
+- React Frontend 
+- Data analysis of Kaggle data
+- Connection Frontend to FastAPI 
+- Preprocessing pipeline
+- Code Standards (PEP8, Functions)
+
+##### Max Ludwig
+- CNN creation, testing and implementation
+- FastAPI backend creation  
+- Infrastructure setup
+- Data analysis of Kaggle data
+
+##### Pascal Hansen
+- Genius lyrics scraping
+- Lastfm tags scraping (for mood ground truth labels)
+- Elasticsearch (index creation, adding documents, …)
+- Initial lyrics normalization
+- TF-IDF lyrics representation
+
 
 
 ## Project state
 
 #### Data analysis 
 ##### Data Sources, Preprocessing and Basic Statistics
-For a detailed description of the data analysis performed please see *ta_lyrics_sentiment_classification/data_exploration/readme.md* as well as the jupyter notebooks found under *ta_lyrics_sentiment_classification/data_exploration/*.
+For a detailed description of the data analysis performed please see *ta_lyrics_sentiment_classification/data_exploration/readme.md* as well as the jupyter notebooks located under *ta_lyrics_sentiment_classification/data_exploration/*.
 ##### Experiments 
 <img src="images/no_experiments_meme.png" width="300"/>
 
 
 #### Planning state
-So far we have performed data analysis on lyrics and artist data from kaggle (see data analysis readme). Furthermore based on the labels found in the baseline paper for this project we have scraped the kaggle and last.fm dataset to see whether or not the lyrics are suitable for an ML driven sentiment classification approach. Based on the given datasets and planning state, we have two major options to choose from in order to recommend similar songs (sentiment) based on the input lyrics or song name given by the user. 
+So far we have performed data analysis on lyrics and artist data from kaggle (see data analysis readme). Furthermore, based on the labels found in the baseline paper for this project we have scraped the kaggle and last.fm dataset to see whether or not the lyrics are suitable for an ML driven sentiment classification approach. Based on the given datasets and planning state, we have two major options to choose from in order to recommend similar songs (sentiment) based on the input lyrics or song name given by the user. 
 
 *Option 1:*
-Most of the songs that are in the kaggle dataset are also found in the last.fm database (accessible via last.fm API). Therefore the kaggle songs can be labeled based on the user input found in the last.fm data. Using these labels we can train our own ML model using the labels as the gold labels for the model. New songs get classified by this model. Best matching songs for the same sentiment get ordered by cosine similarity in order to give the best recommendation for the same sentiment. 
+Most of the songs that are in the kaggle dataset are also found in the last.fm database (accessible via last.fm API). Therefore, the kaggle songs can be labeled based on the user input found in the last.fm data. Using these labels we can train our own ML model using the labels as the gold labels for the model. New songs get classified by this model. Best matching songs for the same sentiment get ordered by cosine similarity in order to give the best recommendation for the same sentiment. 
 
 *Option 2:* 
 We are not able to label our songs from the kaggle dataset, since they are not included in the last.fm dataset.
-However we can determine similar songs based on combinations of cosine similarity, pearson, clustering and non negative matrix factorization (NMF).
+However we can identify similar songs based on combinations of cosine similarity, pearson, clustering and non-negative matrix factorization (NMF).
 Furthermore it is possible to think of additionally labeling each songs sentiment based on new keywords we defined that were found often in the kaggle dataset.
 
 
 #### Future planning 
 As you can see in our data analysis, we found that ~ 93,4 % of the songs in the kaggle dataset are contained in the last.fm dataset. Furthermore, we can assign moods based on the labels found in the last.fm dataset for ~ 15,02 % of all songs. After first adjustments, the ratio can be even expanded to 24,58 % by modifying the keywords for the moods. 
-This may not seem like much, however, since our overall database consists of 200.00 songs, this presents us a solid base of training data. Hence we will chose option 1 (see previous section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. For the complete analysis on the distributions, please refer to our data analysis.
+This may not seem like much, however, since our overall database consists of 200.00 songs, this presents us a solid base of training data. Therefore, we will chose option 1 (see previous section Planning state) to classify song sentiments and recommend similar songs based on the lyric or song name input. For the complete analysis on the distributions, please refer to our data analysis.
 
 Following a short depiction of our aimed preprocessing steps for our ML model: 
 - Tokenization
@@ -67,7 +88,7 @@ Other preprocessing steps are possible if required.
 As most of the songs of the used Kaggle dataset can be found in last.fm and therefore in total around 29k songs could be assigned to a sentiment, we decided for option 1.
 
 
-##### Data Cleaning 
+##### Data cleaning 
 Before we actually used this data, we needed to apply certain steps for filtering and cleansing the data from abnormalities (e.g., lyrics that only contain the word "instrumental"), as seen in the data exploration chapter.
 Hence, we started to remove non-english songs and took only songs that have more than 70 but less than 1000 words.
 Furthermore, we were removing certain character sequences from the lyrics, such as anything related to the word chorus indicating that there the chorus defined at the beginning of the song is sung.
@@ -78,7 +99,7 @@ To remove this, we were using regular expressions and filtered all text sequence
 The data cleaning and filtering of the kaggle dataset has been performed in the Jupyter notebook "kaggle_data_preprocessing.ipynb", which saves all the cleaned data in a .csv file. 
 
 
-##### Data Storage
+##### Data storage
 To store the data, we are using Elasticsearch. 
 We created our own Elasticsearch index "lyrics_mood_classification" that saves information on the song name, artist name, lyrics and mood/sentiment for each song from the Kaggle dataset.
 To initialize the Elasticsearch index, we are firstly using the .csv file created in the "kaggle_data_preprocessing.ipynb".
@@ -86,7 +107,7 @@ During this first index creation process, we are saving the index in an Elastics
 For later initializations of the index, e.g., when the Docker container has been removed, the Elasticsearch dump file will be used, providing a faster start up.
 
 
-##### Data Preprocessing 
+##### Data preprocessing 
 After cleaning the data we need to further prepare the data for the CNN model. 
 The folowing steps were performed using the spacy (https://spacy.io/) python library. Spacy allows us to easily perform the folloing steps using predefined english tokenizers, stop words, punctutation and lemmatization. 
 - Tokenization
@@ -137,7 +158,7 @@ This reduced the amount of songs we could train on, but it also ensured that we 
 
 
 #### CNN creation 
-As mentioned above the CNN was trained on the three different datasets  (unbalanced dataset, four mood dataset and seven mood dataset). Since it was out of scope to create a CNN completely on our own and trying to optimize it, we took an approach from [kaggle](https://www.kaggle.com/code/jagannathrk/word2vec-cnn-text-classification) to speed things up. This gave us some formal processing steps as well as a sample CNN which we then trained on our test sets also with some hyperparameter optimization. The CNN also includes an additional embedding layer that encodes the lyrics as Word2Vec in order to analyze them. For this the gensim library was used. However, before putting the training data into the model, we preprocessed the song lyrics in order to achieve better results. The preprocessing pipeline is described in the above section "Data Preprocessing".
+As mentioned above the CNN was trained on the three different datasets  (unbalanced dataset, four mood dataset and seven mood dataset). Since it was out of scope to create a CNN completely on our own and trying to optimize it, we took an approach from [kaggle](https://www.kaggle.com/code/jagannathrk/word2vec-cnn-text-classification) to speed things up. This gave us some formal processing steps as well as a sample CNN which we then trained on our test sets also with some hyperparameter optimization. Before putting the training data into the model, we preprocessed the song lyrics in order to achieve better results. The preprocessing pipeline is described in the above section "Data Preprocessing".
 The following table depicts the results of the best performing hyperparameter combination for each dataset (The optimization can be seen in the notebook data_exploration/CNN-Model-Creation.ipynb):
 
 | Dataset             | Model Accuracy (%) | Random Prediction (%) | Improvement to Random (Accuracy/Random Prediction) |
@@ -177,7 +198,7 @@ The following image displays the use case in which a song was not found in Elast
 If a user queries for a song that is not in the database yet, the backend will access the Genius API and search for the song. If it can be found, it will scrape for the lyrics. After that, the lyrics need to be preprocessed in a preprocessing pipeline, which will be presented in more depth in the following section. After the preprocessing, the song can be analyzed then using the CNN of the baseline project. After that the result will be stored in Elasticsearch.
 
 
-##### Frontend Implementation 
+##### Frontend implementation 
 The frontend allows the user to pass a song as well as an artist name to the fields "Song Name" and "Aritst Name" respectively. 
 When clicking the button "Find Similar Songs" the mood of the song is classified and similar songs are searched for.
 After that, the top 3 most similar songs are presented.  
