@@ -88,14 +88,14 @@ Other preprocessing steps are possible if required.
 As most of the songs of the used Kaggle dataset can be found in last.fm and therefore in total around 29k songs could be assigned to a sentiment, we decided for option 1.
 
 
-##### Data cleaning 
+##### Data Cleansing 
 Before we actually used this data, we needed to apply certain steps for filtering and cleansing the data from abnormalities (e.g., lyrics that only contain the word "instrumental"), as seen in the data exploration chapter.
 Hence, we started to remove non-english songs and took only songs that have more than 70 but less than 1000 words.
 Furthermore, we were removing certain character sequences from the lyrics, such as anything related to the word chorus indicating that there the chorus defined at the beginning of the song is sung.
 Besides specific words like chorus that are not part of the actual lyrics, some lyrics also contain information about the artist that is singing a specific part of the song. 
 These kind of information has been mostly placed in special parentheses like [], <>, (), {}. 
 To remove this, we were using regular expressions and filtered all text sequences inside parentheses (including the parentheses). 
-<img src="images/chorus_text_cleansing_example.png" width="1000"/>
+<img src="images/chorus_text_cleansing_example.png" width="1100"/>
 The data cleaning and filtering of the kaggle dataset has been performed in the Jupyter notebook "kaggle_data_preprocessing.ipynb", which saves all the cleaned data in a .csv file. 
 
 
