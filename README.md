@@ -12,7 +12,7 @@ A Song Recommendation System using Lyrics Sentiment Classification
 In this project we will use the Github project https://github.com/workmanjack/lyric-mood-classification as our starting point. We will utilize the developed CNN for mood classification based on lyrics in this project and apply it to our dataset (https://www.kaggle.com/datasets/neisse/scrapped-lyrics-from-6-genres?select=lyrics-data.csv). The data of the dataset needs to be downloaded from heibox (https://heibox.uni-heidelberg.de/d/e7f92e149b804a82be8b/) and the <em>data</em> folder containing the .csv files needs to be placed in the <em> ta_lyrics_sentiment_classification/data_exploration/ </em> folder.
 
 #### Utilized libraries
-The utilized libraries can be found in our requirements.txt file in the root of our Github project. In general, the code of our project can be started by simply using the command ``` docker-compose up ```, which installs, builds and starts all necessary services and libraries. Only docker (preferably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your system.
+The utilized libraries can be found in our requirements.txt file in the backend directory of our Github project. In general, the code of our project can be started by simply using the command ``` docker-compose up ```, which installs, builds and starts all necessary services and libraries. Only docker (preferably in Linux or WSL2) is a prerequisite. Please note that it might take up to ~5 minutes to start the application properly, based on your system.
 
 ### wait-for-it.sh
 The wait-for-it.sh script used for the elasticsearch component was taken from https://github.com/vishnubob/wait-for-it. 
@@ -63,9 +63,6 @@ Other preprocessing steps are possible if required.
 
 
 #### Final implementation
-<TODO: 
---> Cnn infos max 
---> Frontend beispiel screenshot simon. 
 
 As most of the songs of the used Kaggle dataset can be found in last.fm and therefore in total around 29k songs could be assigned to a sentiment, we decided for option 1.
 
@@ -153,14 +150,6 @@ The following table depicts the results of the best performing hyperparameter co
 As one can see, the balanced four moods approach did perform best, followed by the unbalanced one and at last the balanced one with seven moods. This is to be expected, since the chance of a random prediction being correct for four moods is quite high as opposed to the other approaches. Taken into account the random chance, the unbalanced approach did perform best which is also expected since it has most likely overfitted to the mood "sad" which was represented way more often than any other mood. The at first glance weakest approach of the seven moods hence works best when taking the random chance into account and the fact that the first model is not viable.
 
 
-<TODO: Text on preprocessing pipeline, i.e., tokenization, stopword removal, ... (Simon/Max)>
-
-When one enters a song that is not in the Elasticsearch index yet, we are applying the CNN and then adding the song to our Elasticsearch index with the classified mood.
-
-<TODO: Text on tfidf+cosine simularity computation, frontend (Simon)>
-
-
-
 
 #### High-level architecture description
 In the following picture, you can see the high level architecture of the project in regard to the technology stack that will be used. 
@@ -193,12 +182,14 @@ The frontend allows the user to pass a song as well as an artist name to the fie
 When clicking the button "Find Similar Songs" the mood of the song is classified and similar songs are searched for.
 After that, the top 3 most similar songs are presented.  
 Example: 
-<img src="images/frontend_classification_example.png" width="600"/>
+
+<img src="images/frontend_classification_example.png" width="1000"/>
 
 
 If the input is not correct (e.g. missing artist name) a error message will be presented. 
 Example:
-<img src="images/frontend_error_message_example.png" width="600"/>
+
+<img src="images/frontend_error_message_example.png" width="2200"/>
 
 
 
